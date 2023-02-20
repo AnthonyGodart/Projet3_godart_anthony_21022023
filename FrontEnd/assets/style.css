@@ -15,7 +15,7 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+time, mark, audio, video, button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -25,7 +25,7 @@ time, mark, audio, video {
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+footer, header, hgroup, menu, nav, button, section {
 	display: block;
 }
 body {
@@ -124,6 +124,21 @@ li:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+}
+.filter-bar{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	padding: 30px;
+}
+.filter{
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+	color: #1D6154;
+	width: 174px;
+	height: 36px;
+	border: 3px solid #1D6154;
+	border-radius: 60px;
 }
 .gallery {
 	width: 100%;

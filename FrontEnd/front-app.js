@@ -1,3 +1,5 @@
+// Générer la liste des travaux de façon dynamique
+
 const workList = await fetch("http://localhost:5678/api/works")
     .then(workList => workList.json());
 
@@ -15,10 +17,18 @@ async function generateWorkSheet(workList){
         titleElement.innerText = workList[i].title
         workElement.appendChild(titleElement)
 
-        console.log(workElement)
-
         gallery.appendChild(workElement)
     }
 }
 
 generateWorkSheet(workList);
+
+// Créer les filtres en fonction de la catégorie
+
+const filterButtons = document.querySelectorAll(".filter")
+for(let button of filterButtons){
+    button.addEventListener('click', () => {
+        //Ici le code pour filtrer les <figure> par catégorie (data-id)
+        console.log("Ca fonctionne !")
+    });
+}
