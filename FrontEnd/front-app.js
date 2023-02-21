@@ -24,7 +24,7 @@ async function generateWorkSheet(workList){
 generateWorkSheet(workList);
 
 // Créer les filtres en fonction de la catégorie
-function changeButtonStyle(button){
+function changeFilterButtonStyle(button){
     if(button.classList.contains("active")){
         return
     } else {
@@ -44,15 +44,14 @@ let clickedButtonId = 0
 
 for(let button of filterButtons){
     button.addEventListener('click', () => {
-        changeButtonStyle(button)
+        changeFilterButtonStyle(button)
         //Ici le code pour filtrer les <figure> par catégorie (data-id)
-
-        for ( let i = workIds.length - 1; i >= 0; i--){
-            console.log(clickedButtonId)
-            if(workIds[i] !== clickedButtonId){
-                workIds.splice(i, 1)
-            }
-        console.log(workIds)
-        }
+        //for ( let i = workIds.length - 1; i >= 0; i--){
+        //    console.log(clickedButtonId)
+        //    if(workIds[i] !== clickedButtonId){
+        //        workIds.splice(i, 1)
+        //    }
+        //console.log(workIds)
+        //}
     });
 }
