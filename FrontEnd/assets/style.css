@@ -140,6 +140,10 @@ li:hover {
 	border: 3px solid #1D6154;
 	border-radius: 60px;
 }
+.active{
+	background-color: #1D6154;
+	color: #FFFFFF;
+}
 .gallery {
 	width: 100%;
 	display: grid;
