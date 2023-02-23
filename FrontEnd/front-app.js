@@ -6,6 +6,8 @@ const workList =
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
 let clickedButtonId = 0
+const categoryId = Array.from(new Set(workList.map(work => work.categoryId)))
+categoryId.push(0)
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -28,6 +30,20 @@ async function generateWorkSheet(){
         gallery.appendChild(workElement)
     }
 }
+// Je tente de créer la filter-bar en dynamique
+/**function generateFilterBar(){
+    const filterBar = document.querySelector(".filter-bar");
+ 
+    for (let i = 0; i < categoryId.length; i++) {
+        const category = categoryId[i];
+        const button = document.createElement("button");
+        button.innerText = categoryId[i];
+        button.setAttribute("data-key", category);
+        button.setAttribute("type", "button")
+        button.classList.add("filter");
+        filterBar.appendChild(button);
+    }
+}**/
 // J'adapte generateWorkSheet() pour qu'il n'affiche que les fiches triées : OK
 function filterSheet() {
     const gallery = document.querySelector(".gallery");
@@ -64,7 +80,7 @@ function changeFilterButtonStyle(button){
     }
 }
 // Créer le listener sur les boutons et afficher le 'data-key' du bouton cliqué OK
-function onClick(){
+function onButtonFilterClick(){
     for(let button of filterButtons){
         button.addEventListener('click', () => {
             //Ici la fonction pour changer la couleur du bouton lors du click : OK
@@ -84,4 +100,4 @@ function onClick(){
 // A la première ouverture de la page web ou à son rechargement
 generateWorkSheet()
 // Au clic sur le bouton filtre
-onClick()
+onButtonFilterClick()
