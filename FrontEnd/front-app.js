@@ -42,7 +42,7 @@ function changeFilterButtonStyle(button){
         }
     }
 }
-// Créer le listener sur les boutons
+// Créer le listener sur les boutons et afficher le 'data-key' du bouton cliqué
 function onClick(){
     for(let button of filterButtons){
         button.addEventListener('click', () => {
