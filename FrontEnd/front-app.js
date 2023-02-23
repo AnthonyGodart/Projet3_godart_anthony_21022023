@@ -6,8 +6,6 @@ const workList =
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
 let clickedButtonId = 0
-const categoryId = Array.from(new Set(workList.map(work => work.categoryId)))
-categoryId.push(0)
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -31,6 +29,8 @@ async function generateWorkSheet(){
     }
 }
 // Je tente de créer la filter-bar en dynamique
+//const categoryId = Array.from(new Set(workList.map(work => work.categoryId)))
+//categoryId.push(0)
 /**function generateFilterBar(){
     const filterBar = document.querySelector(".filter-bar");
  
