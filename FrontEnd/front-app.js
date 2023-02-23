@@ -28,10 +28,10 @@ async function generateWorkSheet(){
         gallery.appendChild(workElement)
     }
 }
-// Je tente de créer la filter-bar en dynamique
-//const categoryId = Array.from(new Set(workList.map(work => work.categoryId)))
-//categoryId.push(0)
-/**function generateFilterBar(){
+/** // Je tente de créer la filter-bar en dynamique
+const categoryId = Array.from(new Set(workList.map(work => work.categoryId)))
+categoryId.push(0)
+function generateFilterBar(){
     const filterBar = document.querySelector(".filter-bar");
  
     for (let i = 0; i < categoryId.length; i++) {
@@ -48,7 +48,6 @@ async function generateWorkSheet(){
 function filterSheet() {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
-
     const filteredWorkList = workList.filter(workSheet => workSheet.categoryId == clickedButtonId);
 
     for (let i = 0; i < filteredWorkList.length; i++) {
