@@ -1,7 +1,9 @@
 // Déclaration des variables
 // Récupérer les données du Back-end
-const workList = await fetch("http://localhost:5678/api/works")
+const workList =
+    await fetch("http://localhost:5678/api/works")
     .then(workList => workList.json());
+console.log(workList)
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
 let clickedButtonId = 0
@@ -27,7 +29,6 @@ async function generateWorkSheet(){
         gallery.appendChild(workElement)
     }
 }
-generateWorkSheet(workList)
 // Changer les couleurs des boutons : OK
 function changeFilterButtonStyle(button){
     if(button.classList.contains("active")){
@@ -50,25 +51,18 @@ function onClick(){
             changeFilterButtonStyle(button)
             //Ici la fonction pour filtrer les <figure> par catégorie (data-id)
             //en fonction du bouton cliqué (data-key)
-            const buttonKey = button.getAttribute('data-key')
-            console.log(buttonKey)
+            filterSheet()
         });
     }
 }
-onClick()
-
-// Générer les Ids des fiches
-/**function generateWorkSheetId(){
-    const workSheetList = new Set(workList)
-    const workSheetListData = workSheetList.entries()
-    for ( const data of workSheetListData ){
-        const sheetId = data[0].categoryId
-        console.log(sheetId)
+function filterSheet(){
+    for ( let workSheet of workList){
+        if ( workSheet.categoryId == clickedButtonId){
+            const filteredSheets = [workSheet]
+            console.table(filteredSheets)
+        }
     }
 }
-generateWorkSheetId()**/
-
-// Filtrer les fiches de travail par catégorie au click sur les boutons filtres
-//const sheetList = document.querySelectorAll(".sheet")
-
-
+// Appel des fonctions
+generateWorkSheet()
+onClick()
