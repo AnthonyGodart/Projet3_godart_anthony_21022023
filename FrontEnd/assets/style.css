@@ -97,6 +97,11 @@ nav li {
 
 li:hover {
 	color: #B1663C;
+	cursor: pointer;
+}
+.current {
+	color: black;
+	font-weight: 600;
 }
 #introduction {
 	display: flex;
@@ -199,6 +204,45 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+.login-page{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	margin: 110px;
+}
+.login-title{
+	font-family: 'Syne';
+	font-size: 30px;
+	font-weight: 700;
+	padding: 20px;
+}
+.login-form{
+	display: flex;
+	flex-direction: column;
+	place-content: space-evenly;
+}
+.form-field{
+	box-sizing: border-box;
+	width: 379px;
+	height: 51px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin: 10px;
+}
+.form-button{
+	background-color: #1D6154;
+	color: #FFFFFF;
+	text-align: center;
+	border: 3px solid #1D6154;
+	border-radius: 60px;
+	padding: 10px;
+	margin-top: 20px;
+}
+.forgottenPasswordLink{
+	padding: 20px;
+	text-decoration: underline;
+}
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
