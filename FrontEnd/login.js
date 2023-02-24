@@ -1,5 +1,6 @@
 const linkers = [...document.querySelectorAll('li')]
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
+const windowUrl = window.location.href
 for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
@@ -52,7 +53,7 @@ for (let link of linkers){
         } else {
             document.addEventListener('click', (e) =>{
                 if(e.target.innerText !== "login"){
-                    window.location.href = "http://127.0.0.1:5500/FrontEnd/index.html"
+                    window.location.href = windowUrl
                 } else {
                     if(e.target.innerText == "projets"){
                         window.location.hash = "#portfolio"
