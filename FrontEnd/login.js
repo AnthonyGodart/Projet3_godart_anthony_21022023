@@ -90,7 +90,9 @@ for (let link of linkers){
     })
 }
 
-/**let userEmail = document.getElementById('email')
+
+/**async function logUser(){
+let userEmail = document.getElementById('email')
 let userPassword = document.getElementById('password')
 const userLogin = {
     email: userEmail,
@@ -105,10 +107,13 @@ const authorizeLog =
             'Content-type': 'application/json'
         },
         body: JSON.stringify(userLogin)
-    }).then(authorizeLog => authorizeLog.json())
+    }).then(authorizeLog => {
+        if(authorizeLog.json() != null){
+            window.location.href = windowUrl
+        } else {
+            alert('Erreur d\'identifiants')
+        }
+    })
 console.log(authorizeLog)
-
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4"
-if (authorizeLog === token){
-    console.log("Dans le cul la balayette")
-} **/
+}
+logUser()**/

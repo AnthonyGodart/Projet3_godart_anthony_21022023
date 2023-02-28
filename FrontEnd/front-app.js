@@ -100,6 +100,7 @@ function onButtonFilterClick(){
 generateWorkSheet()
 // Au clic sur le bouton filtre
 onButtonFilterClick()
+
 // Au retour du clic sur le lien LogIn si on fait marche arrière
 function regenerateMainPage(){
 const main = document.querySelector("main")
