@@ -90,9 +90,7 @@ for (let link of linkers){
     })
 }
 
-async function logUser(){
-
-let userEmail = document.getElementById('email')
+/**let userEmail = document.getElementById('email')
 let userPassword = document.getElementById('password')
 const userLogin = {
     email: userEmail,
@@ -108,6 +106,9 @@ const authorizeLog =
         },
         body: JSON.stringify(userLogin)
     }).then(authorizeLog => authorizeLog.json())
-
 console.log(authorizeLog)
-}
+
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4"
+if (authorizeLog === token){
+    console.log("Dans le cul la balayette")
+} **/
