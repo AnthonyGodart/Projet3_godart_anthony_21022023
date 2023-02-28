@@ -3,6 +3,7 @@
 const workList =
     await fetch("http://localhost:5678/api/works")
     .then(workList => workList.json());
+
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
 let clickedButtonId = 0
@@ -167,22 +168,9 @@ if ( main.innerHTML == null){
 
 const linkers = [...document.querySelectorAll('li')]
 let clickedLink = 0
-function boldifyCurrentLinker(link){
-    if(link.classList.contains("current")){
-        return
-    } else {
-        link.classList.add("current")
-    }
-    clickedLink = link.getAttribute('data-key')
-    for ( let i = 0; i < linkers.length; i++){
-        if(linkers[i].getAttribute('data-key') != clickedLink){
-            linkers[i].classList.remove("current")
-        }
-    }
-}
+
 for (let link of linkers){
     link.addEventListener('click', () => {
-        boldifyCurrentLinker(link)
         switch(link.innerText){
             case "projets" :
                 regenerateMainPage()

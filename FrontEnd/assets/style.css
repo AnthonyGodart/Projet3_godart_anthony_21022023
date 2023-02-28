@@ -101,7 +101,7 @@ li:hover {
 }
 .current {
 	color: black;
-	font-weight: 600;
+	font-weight: 800;
 }
 #introduction {
 	display: flex;
@@ -209,7 +209,7 @@ input[type="submit"]{
 	flex-direction: column;
 	justify-content: space-around;
 	align-items: center;
-	margin: 110px;
+	margin: 50px;
 }
 .login-title{
 	font-family: 'Syne';
@@ -228,7 +228,12 @@ input[type="submit"]{
 	height: 51px;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	margin: 10px;
+}
+.form-field-div{
+	display: flex;
+	flex-direction: column;
+	color: rgba(0, 0, 0, 0.09);
+	padding: 20px;
 }
 .form-button{
 	background-color: #1D6154;
