@@ -28,24 +28,8 @@ async function generateWorkSheet(){
         gallery.appendChild(workElement)
     }
 }
-/** // Je tente de créer la filter-bar en dynamique
-const categoryId = Array.from(new Set(workList.map(work => work.categoryId)))
-categoryId.push(0)
-function generateFilterBar(){
-    const filterBar = document.querySelector(".filter-bar");
- 
-    for (let i = 0; i < categoryId.length; i++) {
-        const category = categoryId[i];
-        const button = document.createElement("button");
-        button.innerText = categoryId[i];
-        button.setAttribute("data-key", category);
-        button.setAttribute("type", "button")
-        button.classList.add("filter");
-        filterBar.appendChild(button);
-    }
-}**/
 // J'adapte generateWorkSheet() pour qu'il n'affiche que les fiches triées : OK
-function filterSheet() {
+async function filterSheet() {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
     const filteredWorkList = workList.filter(workSheet => workSheet.categoryId == clickedButtonId);
@@ -72,9 +56,9 @@ function changeFilterButtonStyle(button){
         button.classList.add("active")
     }
     clickedButtonId = button.getAttribute('data-key')
-    for ( let i = 0; i < filterButtons.length; i++){
-        if(filterButtons[i].getAttribute('data-key') != clickedButtonId){
-            filterButtons[i].classList.remove("active")
+    for ( const currentButton of filterButtons){
+        if(currentButton.getAttribute('data-key') != clickedButtonId){
+            currentButton.classList.remove("active")
         }
     }
 }
@@ -103,73 +87,11 @@ onButtonFilterClick()
 
 // Au retour du clic sur le lien LogIn si on fait marche arrière
 function regenerateMainPage(){
-const main = document.querySelector("main")
-if ( main.innerHTML == null){
-    const introduction = document.createElement('section')
-        introduction.setAttribute("id", "introduction")
-        const introductionImgHolder = document.createElement('figure')
-            const introductionImg = document.createElement('img')
-                introductionImg.src ="./assets/images/sophie-bluel.png"
-        introductionImgHolder.appendChild(introductionImg)
-        const introductionArticle = document.createElement('article')
-            const introductionArticleTitle = document.createElement('h2')
-                introductionArticleTitle.innerText = "Designer d'espace"
-            const introductionArticlePOne = document.createElement('p')
-                introductionArticlePOne.innerText = "Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier."
-            const introductionArticlePTwo = document.createElement('p')
-                introductionArticlePTwo.innerText = "Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget."
-            const introductionArticlePThree = document.createElement('p')
-                introductionArticlePThree.innerText = "En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)"
-        introductionArticle.appendChild(introductionArticleTitle)
-        introductionArticle.appendChild(introductionArticlePOne)
-        introductionArticle.appendChild(introductionArticlePTwo)
-        introductionArticle.appendChild(introductionArticlePThree)
-    const portfolio = document.createElement('section')
-        portfolio.setAttribute("id", "portfolio")
-        const portfolioTitle = document.createElement('h2')
-            portfolioTitle.innerText = "Mes Projets"
-        const portfolioFilterBar = document.createElement('nav')
-            portfolioFilterBar.classList.add("filter-bar")
-            const buttonZero = document.createElement('button')
-                buttonZero.classList.add("filter active")
-                buttonZero.setAttribute("type", "button")
-                buttonZero.setAttribute("data-key", "0")
-                buttonZero.innerText = "Tous"
-            const buttonOne = document.createElement('button')
-                buttonOne.classList.add("filter")
-                buttonOne.setAttribute("type", "button")
-                buttonOne.setAttribute("data-key", "1")
-                buttonOne.innerText = "Objets"
-            const buttonTwo = document.createElement('button')
-                buttonTwo.classList.add("filter")
-                buttonTwo.setAttribute("type", "button")
-                buttonTwo.setAttribute("data-key", "2")
-                buttonTwo.innerText = "Appartements"
-            const buttonThree = document.createElement('button')
-                buttonThree.classList.add("filter")
-                buttonThree.setAttribute("type", "button")
-                buttonThree.setAttribute("data-key", "3")
-                buttonThree.innerText = "Hôtels et restaurants"
-            portfolioFilterBar.appendChild(buttonZero)
-            portfolioFilterBar.appendChild(buttonOne)
-            portfolioFilterBar.appendChild(buttonTwo)
-            portfolioFilterBar.appendChild(buttonThree)
-        const portfolioGallery = document.createElement('div')
-            portfolioGallery.classList.add("gallery")
-        portfolio.appendChild(portfolioTitle)
-        portfolio.appendChild(portfolioFilterBar)
-        portfolio.appendChild(portfolioGallery)
-    generateWorkSheet()
-    const contact = document.createElement('section')
-    main.appendChild(introduction)
-    main.appendChild(portfolio)
-    main.appendChild(contact)
-}
+    window.location.href = windowUrl
 }
 
 const linkers = [...document.querySelectorAll('li')]
 let clickedLink = 0
-
 for (let link of linkers){
     link.addEventListener('click', () => {
         switch(link.innerText){
@@ -190,4 +112,133 @@ for (let link of linkers){
             default : regenerateMainPage();
         }
     })
+}
+const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
+const windowUrl = window.location.href
+for (let i = 0; i< linkers.length; i ++){
+    linkers[i].setAttribute("href", linkerHref[i]) 
+}
+
+// Générer ma page de connexion en dynamique
+for (let link of linkers){
+    link.addEventListener('click', () => {
+        if (link.innerText == "login"){
+            const main = document.querySelector('main')
+            main.innerHTML=""
+
+            // Créer le HTML de ma page de connexion
+            const loginPage = document.createElement('div')
+            loginPage.classList.add("login-page")
+
+            const loginTitle = document.createElement('h2')
+            loginTitle.classList.add("login-title")
+            loginTitle.innerText = "Log In"
+
+            const loginForm = document.createElement('form')
+            loginForm.action = ""
+            loginForm.method = "post"
+            loginForm.classList.add("login-form")
+
+            const emailInputDiv = document.createElement('div')
+            emailInputDiv.classList.add("form-field-div")
+            const emailInputLabel = document.createElement('label')
+            emailInputLabel.for = "email"
+            emailInputLabel.innerText = "E-mail"
+                const emailInput = document.createElement('input')
+                emailInput.required = true
+                emailInput.id = "email"
+                emailInput.name = "email"
+                emailInput.type = "email"
+                emailInput.classList.add("form-field")
+                emailInputDiv.appendChild(emailInputLabel)
+                emailInputDiv.appendChild(emailInput)
+            loginForm.appendChild(emailInputDiv)
+            loginForm.addEventListener("submit", logUser)
+
+            const passwordInputDiv = document.createElement('div')
+            passwordInputDiv.classList.add("form-field-div")    
+            const passwordInputLabel = document.createElement('label')
+            passwordInputLabel.for = "password"
+            passwordInputLabel.innerText = "Mot de passe"
+                const passwordInput = document.createElement('input')
+                passwordInput.required = true
+                passwordInput.id = "password"
+                passwordInput.name = "password"
+                passwordInput.type = "password"
+                passwordInput.classList.add("form-field")
+                passwordInputDiv.appendChild(passwordInputLabel)
+                passwordInputDiv.appendChild(passwordInput)
+            loginForm.appendChild(passwordInputDiv)
+
+            const connectInputDiv = document.createElement('div')
+            connectInputDiv.classList.add("form-field-div")    
+
+                const connectInput = document.createElement('input')
+                connectInput.type = "submit"
+                connectInput.value = "Se connecter"
+                connectInput.classList.add("form-button")
+                loginForm.appendChild(connectInput)
+
+            const forgottenPasswordLink = document.createElement('a')
+            forgottenPasswordLink.classList.add("forgottenPasswordLink")
+            forgottenPasswordLink.innerText = "Mot de passe oublié"
+
+
+            // Passer le HTML de la page de connexion à mon site
+            loginPage.appendChild(loginTitle)
+            loginPage.appendChild(loginForm)
+            loginPage.appendChild(forgottenPasswordLink)
+            main.appendChild(loginPage)
+        } 
+            // Ou revenir au site
+        else {
+            document.addEventListener('click', (e) =>{
+                if(e.target.innerText !== "login"){
+                    regenerateMainPage()
+                }
+            })
+        }
+    })
+}
+// Gérer la fonction de connexion de l'utilisateur
+async function logUser(event){
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    console.log(email)
+    console.log(password)
+    const userLogin = {
+        'email': email,
+        'password': password
+    }
+    const authorizeLog = 
+        await fetch("http://localhost:5678/api/users/login",
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(userLogin)
+        })
+    const authorizedLog = await authorizeLog.json()
+        if (authorizedLog != null && authorizedLog.userId != 0 && authorizedLog.token != null){
+            localStorage.setItem('userId', authorizedLog.userId)
+            localStorage.setItem('token', authorizedLog.token)
+            regenerateMainPage(createModifierButton)
+            // Ici viendra la fonction générant la page d'un utilisateur connecté
+        } else {
+            alert('Email ou mot de passe incorrect.')
+        }
+}
+
+// Générer la page d'un utilisateur connecté
+function createModifierButton(){
+    const modifierButtonPlace = document.getElementById('portfolio')
+    modifierButtonPlace.appendChild(modifierButton)
+    const modifierButton = document.createElement('a')
+    modifierButton.classList.add("modifierButton")
+    const modifierButtonIcon = document.createElement('i')
+    modifierButtonIcon.classList.add("fa-regular fa-pen-to-square")
+    modifierButton.appendChild(modifierButtonIcon)
 }

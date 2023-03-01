@@ -5,6 +5,7 @@ for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
 
+// Générer ma page de connexion en dynamique
 for (let link of linkers){
     link.addEventListener('click', () => {
         if (link.innerText == "login"){
@@ -60,7 +61,7 @@ for (let link of linkers){
                 const connectInput = document.createElement('input')
                 connectInput.type = "submit"
                 connectInput.value = "Se connecter"
-                connectInput.setAttribute("onclick", "logUser")
+                connectInput.addEventListener("click", logUser)
                 connectInput.classList.add("form-button")
                 loginForm.appendChild(connectInput)
 
@@ -74,46 +75,44 @@ for (let link of linkers){
             loginPage.appendChild(loginForm)
             loginPage.appendChild(forgottenPasswordLink)
             main.appendChild(loginPage)
-        } else {
+        } 
+            // Ou revenir au site
+        else {
             document.addEventListener('click', (e) =>{
                 if(e.target.innerText !== "login"){
                     window.location.href = windowUrl
-                } else {
-                    if(e.target.innerText == "projets"){
-                        document.location.hash = "portfolio"
-                    } else if (e.target.innerText == "contact"){
-                        document.location.hash = "contact"
-                    }
                 }
             })
         }
     })
 }
 
-
-/**async function logUser(){
-let userEmail = document.getElementById('email')
-let userPassword = document.getElementById('password')
-const userLogin = {
-    email: userEmail,
-    password: userPassword
-}
-const authorizeLog = 
-    await fetch("http://localhost:5678/api/users/login",
-    {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify(userLogin)
-    }).then(authorizeLog => {
-        if(authorizeLog.json() != null){
+async function logUser(event){
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    console.log(email)
+    console.log(password)
+    const userLogin = {
+        'email': email,
+        'password': password
+    }
+    const authorizeLog = 
+        await fetch("http://localhost:5678/api/users/login",
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(userLogin)
+        })
+    const authorizedLog = await authorizeLog.json()
+        if (authorizedLog != null && authorizedLog.userId != 0 && authorizedLog.token != null){
+            localStorage.setItem('userId', authorizedLog.userId)
+            localStorage.setItem('token', authorizedLog.token)
             window.location.href = windowUrl
         } else {
-            alert('Erreur d\'identifiants')
+            alert('Email ou mot de passe incorrect.')
         }
-    })
-console.log(authorizeLog)
 }
-logUser()**/
