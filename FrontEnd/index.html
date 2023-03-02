@@ -37,7 +37,7 @@
 		</article>
 	</section>
 	<section id="portfolio">
-			<h2>Mes Projets <span id="modifier-button"><i class="fa-regular fa-pen-to-square"></i> modifier </span> </h2>
+			<h2>Mes Projets <span id="modifier-button" style="display: none;"><i class="fa-regular fa-pen-to-square"></i> modifier </span> </h2>
 		<nav class="filter-bar">
 			<button class="filter active" type="button" data-key="0">Tous</button>
 			<button class="filter" type="button" data-key="1">Objets</button>
@@ -59,6 +59,23 @@
 			<label for="message">Message</label>
 			<textarea name="message" id="message" cols="30" rows="10"></textarea>
 			<input type="submit" value="Envoyer">
+		</form>
+	</section>
+	<section id="login-page" style="display: none;">
+		<h2 class="login-title">Log In</h2>
+		<form action="" id ="login-form" class="login-form" method="post">
+			<div class="form-field-div">
+				<label for="email">E-mail</label>
+				<input required id="emailUser" name ="email" type="email" class="form-field">
+			</div>
+			<div class="form-field-div">
+				<label for="password">Mot de passe</label>
+				<input required id="passwordUser" name ="password" type="password" class="form-field">
+			</div>
+			<div class="form-field-div">
+				<input type="submit" value="Se connecter" class="form-button">
+			</div>
+			<a href="" class="forgottenPasswordLink">Mot de passe oublié</a>
 		</form>
 	</section>
 </main>

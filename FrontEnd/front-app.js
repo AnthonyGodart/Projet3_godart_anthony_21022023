@@ -98,71 +98,17 @@ for (let i = 0; i< linkers.length; i ++){
 for (let link of linkers){
     link.addEventListener('click', () => {
         if (link.innerText == "login"){
-            const main = document.querySelector('main')
-            main.innerHTML=""
-
-            // Créer le HTML de ma page de connexion
-            const loginPage = document.createElement('div')
-            loginPage.classList.add("login-page")
-
-            const loginTitle = document.createElement('h2')
-            loginTitle.classList.add("login-title")
-            loginTitle.innerText = "Log In"
-
-            const loginForm = document.createElement('form')
-            loginForm.action = ""
-            loginForm.method = "post"
-            loginForm.classList.add("login-form")
-
-            const emailInputDiv = document.createElement('div')
-            emailInputDiv.classList.add("form-field-div")
-            const emailInputLabel = document.createElement('label')
-            emailInputLabel.for = "email"
-            emailInputLabel.innerText = "E-mail"
-                const emailInput = document.createElement('input')
-                emailInput.required = true
-                emailInput.id = "email"
-                emailInput.name = "email"
-                emailInput.type = "email"
-                emailInput.classList.add("form-field")
-                emailInputDiv.appendChild(emailInputLabel)
-                emailInputDiv.appendChild(emailInput)
-            loginForm.appendChild(emailInputDiv)
+            const sections = document.querySelectorAll('section')
+            for (let section of sections){
+                const loginPage = document.getElementById("login-page")
+                const sectionId = section.getAttribute('id')
+                if(!section.style.display && sectionId != loginPage.id){
+                    section.style.display = "none"
+                }
+                loginPage.style.display = "null"
+            }            
+            const loginForm = document.getElementById('login-form')
             loginForm.addEventListener("submit", logUser)
-
-            const passwordInputDiv = document.createElement('div')
-            passwordInputDiv.classList.add("form-field-div")    
-            const passwordInputLabel = document.createElement('label')
-            passwordInputLabel.for = "password"
-            passwordInputLabel.innerText = "Mot de passe"
-                const passwordInput = document.createElement('input')
-                passwordInput.required = true
-                passwordInput.id = "password"
-                passwordInput.name = "password"
-                passwordInput.type = "password"
-                passwordInput.classList.add("form-field")
-                passwordInputDiv.appendChild(passwordInputLabel)
-                passwordInputDiv.appendChild(passwordInput)
-            loginForm.appendChild(passwordInputDiv)
-
-            const connectInputDiv = document.createElement('div')
-            connectInputDiv.classList.add("form-field-div")    
-
-                const connectInput = document.createElement('input')
-                connectInput.type = "submit"
-                connectInput.value = "Se connecter"
-                connectInput.classList.add("form-button")
-                loginForm.appendChild(connectInput)
-
-            const forgottenPasswordLink = document.createElement('a')
-            forgottenPasswordLink.classList.add("forgottenPasswordLink")
-            forgottenPasswordLink.innerText = "Mot de passe oublié"
-
-            // Passer le HTML de la page de connexion à mon site
-            loginPage.appendChild(loginTitle)
-            loginPage.appendChild(loginForm)
-            loginPage.appendChild(forgottenPasswordLink)
-            main.appendChild(loginPage)
         } 
             // Ou revenir au site
         else {
@@ -183,13 +129,9 @@ function regenerateMainPage(){
 // Gérer la fonction de connexion de l'utilisateur
 async function logUser(event){
     event.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    console.log(email)
-    console.log(password)
     const userLogin = {
-        'email': email,
-        'password': password
+        'email': document.getElementById('emailUser').value,
+        'password': document.getElementById('passwordUser').value
     }
     const authorizeLog = 
         await fetch("http://localhost:5678/api/users/login",
@@ -202,14 +144,16 @@ async function logUser(event){
             body: JSON.stringify(userLogin)
         })
     const authorizedLog = await authorizeLog.json()
-    localStorage.setItem('userId', authorizedLog.userId)
-    localStorage.setItem('token', authorizedLog.token)
+//    localStorage.setItem('userId', authorizedLog.userId)
+//    localStorage.setItem('token', authorizedLog.token)
         if (authorizedLog != null && 
-            authorizedLog.userId == localStorage.getItem('userId') && 
-            authorizedLog.token == localStorage.getItem('token')){
-            regenerateMainPage()
+            authorizedLog.userId !=0 && 
+            authorizedLog.token != null){
+                console.log('ohohoh')
             // Ici viendra la fonction générant la page d'un utilisateur connecté
         } else {
             alert('Email ou mot de passe incorrect.')
         }
 }
+
+

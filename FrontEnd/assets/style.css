@@ -140,7 +140,6 @@ li:hover {
 	font-weight: 400;
 	color: black;
 	padding-left: 30px;
-	display: none;
 }
 .filter-bar{
 	display: flex;
