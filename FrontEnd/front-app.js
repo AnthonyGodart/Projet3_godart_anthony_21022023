@@ -85,34 +85,9 @@ generateWorkSheet()
 // Au clic sur le bouton filtre
 onButtonFilterClick()
 
-// Au retour du clic sur le lien LogIn si on fait marche arrière
-function regenerateMainPage(){
-    window.location.href = windowUrl
-}
 
 const linkers = [...document.querySelectorAll('li')]
 let clickedLink = 0
-for (let link of linkers){
-    link.addEventListener('click', () => {
-        switch(link.innerText){
-            case "projets" :
-                regenerateMainPage()
-                console.log("On veut descendre aux projets")
-                break;
-            case "contact" :
-                regenerateMainPage()
-                console.log("On veut aller à la partie contact")
-                break;
-            case "login":
-                console.log("On affiche la page de LogIn en dynamique")
-                break;
-            case "Mentions Légales":
-                console.log("On veut ouvrir la page des mentions légales")
-                break;
-            default : regenerateMainPage();
-        }
-    })
-}
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 const windowUrl = window.location.href
 for (let i = 0; i< linkers.length; i ++){
@@ -183,7 +158,6 @@ for (let link of linkers){
             forgottenPasswordLink.classList.add("forgottenPasswordLink")
             forgottenPasswordLink.innerText = "Mot de passe oublié"
 
-
             // Passer le HTML de la page de connexion à mon site
             loginPage.appendChild(loginTitle)
             loginPage.appendChild(loginForm)
@@ -200,6 +174,12 @@ for (let link of linkers){
         }
     })
 }
+
+// Au retour du clic sur le lien LogIn si on fait marche arrière
+function regenerateMainPage(){
+    window.location.href = windowUrl
+}
+
 // Gérer la fonction de connexion de l'utilisateur
 async function logUser(event){
     event.preventDefault();
@@ -222,23 +202,14 @@ async function logUser(event){
             body: JSON.stringify(userLogin)
         })
     const authorizedLog = await authorizeLog.json()
-        if (authorizedLog != null && authorizedLog.userId != 0 && authorizedLog.token != null){
-            localStorage.setItem('userId', authorizedLog.userId)
-            localStorage.setItem('token', authorizedLog.token)
-            regenerateMainPage(createModifierButton)
+    localStorage.setItem('userId', authorizedLog.userId)
+    localStorage.setItem('token', authorizedLog.token)
+        if (authorizedLog != null && 
+            authorizedLog.userId == localStorage.getItem('userId') && 
+            authorizedLog.token == localStorage.getItem('token')){
+            regenerateMainPage()
             // Ici viendra la fonction générant la page d'un utilisateur connecté
         } else {
             alert('Email ou mot de passe incorrect.')
         }
-}
-
-// Générer la page d'un utilisateur connecté
-function createModifierButton(){
-    const modifierButtonPlace = document.getElementById('portfolio')
-    modifierButtonPlace.appendChild(modifierButton)
-    const modifierButton = document.createElement('a')
-    modifierButton.classList.add("modifierButton")
-    const modifierButtonIcon = document.createElement('i')
-    modifierButtonIcon.classList.add("fa-regular fa-pen-to-square")
-    modifierButton.appendChild(modifierButtonIcon)
 }
