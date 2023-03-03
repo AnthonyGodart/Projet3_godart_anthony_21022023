@@ -1,17 +1,21 @@
-// Déclaration des variables
-const decodedCredentials = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)credentials\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+// Déclaration des variables globales
+// Initialiser des listeners
 let clickedButtonId = 0
-
-
-
-
+let clickedLink = 0
+// Récupérer le token
+let loggedUserToken = sessionStorage.getItem('token')
+// Récupérer les boutons de la filter-bar
+const filterButtons = document.querySelectorAll(".filter")
+// Récupérer les liens "projets", "contact" etc...
+const linkers = [...document.querySelectorAll('li')]
+// Récupérer le bouton modifier
+let modifierButton = document.getElementById('modifier-button')
+// Pour leur attribuer des ancres plus tard
+const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 // Récupérer les données du Back-end
 const workList =
     await fetch("http://localhost:5678/api/works")
     .then(workList => workList.json());
-
-// Récupérer les boutons de la filter-bar
-const filterButtons = document.querySelectorAll(".filter")
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -83,48 +87,6 @@ function onButtonFilterClick(){
         });
     }
 }
-
-// Appel des fonctions
-// A la première ouverture de la page web ou à son rechargement
-generateWorkSheet()
-// Au clic sur le bouton filtre
-onButtonFilterClick()
-
-
-const linkers = [...document.querySelectorAll('li')]
-let clickedLink = 0
-const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
-for (let i = 0; i< linkers.length; i ++){
-    linkers[i].setAttribute("href", linkerHref[i]) 
-}
-
-// Générer ma page de connexion en dynamique
-for (let link of linkers){
-    link.addEventListener('click', () => {
-        if (link.innerText == "login"){
-            const sections = document.querySelectorAll('section')
-            for (let section of sections){
-                const loginPage = document.getElementById("login-page")
-                const sectionId = section.getAttribute('id')
-                if(!section.style.display && sectionId != loginPage.id){
-                    section.style.display = "none"
-                }
-                loginPage.style.display = ""
-            }            
-            const loginForm = document.getElementById('login-form')
-            loginForm.addEventListener("submit", logUser)
-        } 
-            // Ou revenir au site
-        else {
-            document.addEventListener('click', (e) =>{
-                if(e.target.innerText !== "login"){
-                    window.location.href = "index.html"
-                }
-            })
-        }
-    })
-}
-
 // Gérer la fonction de connexion de l'utilisateur
 async function logUser(event){
     event.preventDefault();
@@ -146,19 +108,60 @@ async function logUser(event){
         if (authorizedLog != null && 
             authorizedLog.userId !=0 && 
             authorizedLog.token != null){
-                // Créer une chaîne de caractères pour les informations d'identification encodées
-                const encodedCredentials = encodeURIComponent(`userId=${authorizedLog.userId}&token=${authorizedLog.token}`);
-                // Créer une date d'expiration pour le cookie (1 heure dans le futur)
-                const expirationDate = new Date();
-                expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-                // Créer des options de sécurité pour le cookie
-                const cookieOptions = 'Secure; HttpOnly; SameSite=Strict; Expires=' + expirationDate.toUTCString();
-                // Ajouter le cookie à l'objet document.cookie
-                document.cookie = 'credentials=' + encodedCredentials + '; ' + cookieOptions;
+                window.sessionStorage.setItem('token', authorizedLog.token)
                 window.location.href = "index.html"
         } else {
             alert('Email ou mot de passe incorrect.')
+                window.sessionStorage.clear()
         }
 }
 
+// Appel des fonctions
+// A la première ouverture de la page web ou à son rechargement
+generateWorkSheet()
+// Au clic sur le bouton filtre
+onButtonFilterClick()
+
+for (let i = 0; i< linkers.length; i ++){
+    linkers[i].setAttribute("href", linkerHref[i]) 
+}
+
+// Générer ma page de connexion en dynamique
+for (let link of linkers){
+    link.addEventListener('click', () => {
+        if (link.innerText == "login"){
+            const sections = document.querySelectorAll('section')
+            for (let section of sections){
+                const loginPage = document.getElementById("login-page")
+                const sectionId = section.getAttribute('id')
+                if(!section.style.display && sectionId != loginPage.id){
+                    section.style.display = "none"
+                }
+                loginPage.style.display = ""
+            }            
+            const loginForm = document.getElementById('login-form')
+            loginForm.addEventListener("submit", logUser)
+        } else if(link.innerText == 'logout'){
+            link.setAttribute('data-key', 'login')
+            link.innerText = "login"
+            window.sessionStorage.removeItem('token')
+            modifierButton.style.display = "none"
+        } else {
+            document.addEventListener('click', (e) =>{
+                if(e.target.innerText !== "login"){
+                    window.location.href = "index.html"
+                }
+            })
+        }
+    })
+}
+
+for (let link of linkers){
+    let logButton = link.getAttribute('data-key')
+    if (logButton == 'login' && loggedUserToken !=null){
+        link.setAttribute('data-key', 'logout')
+        link.innerText = 'logout'
+        modifierButton.style.display = ""
+    }
+}
 
