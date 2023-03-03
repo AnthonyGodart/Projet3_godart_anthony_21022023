@@ -1,4 +1,10 @@
 // Déclaration des variables
+const decodedCredentials = decodeURIComponent(document.cookie.replace(/(?:(?:^|.*;\s*)credentials\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+let clickedButtonId = 0
+
+
+
+
 // Récupérer les données du Back-end
 const workList =
     await fetch("http://localhost:5678/api/works")
@@ -6,7 +12,6 @@ const workList =
 
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
-let clickedButtonId = 0
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -89,7 +94,6 @@ onButtonFilterClick()
 const linkers = [...document.querySelectorAll('li')]
 let clickedLink = 0
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
-const windowUrl = window.location.href
 for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
@@ -105,7 +109,7 @@ for (let link of linkers){
                 if(!section.style.display && sectionId != loginPage.id){
                     section.style.display = "none"
                 }
-                loginPage.style.display = "null"
+                loginPage.style.display = ""
             }            
             const loginForm = document.getElementById('login-form')
             loginForm.addEventListener("submit", logUser)
@@ -114,16 +118,11 @@ for (let link of linkers){
         else {
             document.addEventListener('click', (e) =>{
                 if(e.target.innerText !== "login"){
-                    regenerateMainPage()
+                    window.location.href = "index.html"
                 }
             })
         }
     })
-}
-
-// Au retour du clic sur le lien LogIn si on fait marche arrière
-function regenerateMainPage(){
-    window.location.href = windowUrl
 }
 
 // Gérer la fonction de connexion de l'utilisateur
@@ -144,13 +143,19 @@ async function logUser(event){
             body: JSON.stringify(userLogin)
         })
     const authorizedLog = await authorizeLog.json()
-//    localStorage.setItem('userId', authorizedLog.userId)
-//    localStorage.setItem('token', authorizedLog.token)
         if (authorizedLog != null && 
             authorizedLog.userId !=0 && 
             authorizedLog.token != null){
-                console.log('ohohoh')
-            // Ici viendra la fonction générant la page d'un utilisateur connecté
+                // Créer une chaîne de caractères pour les informations d'identification encodées
+                const encodedCredentials = encodeURIComponent(`userId=${authorizedLog.userId}&token=${authorizedLog.token}`);
+                // Créer une date d'expiration pour le cookie (1 heure dans le futur)
+                const expirationDate = new Date();
+                expirationDate.setFullYear(expirationDate.getFullYear() + 1);
+                // Créer des options de sécurité pour le cookie
+                const cookieOptions = 'Secure; HttpOnly; SameSite=Strict; Expires=' + expirationDate.toUTCString();
+                // Ajouter le cookie à l'objet document.cookie
+                document.cookie = 'credentials=' + encodedCredentials + '; ' + cookieOptions;
+                window.location.href = "index.html"
         } else {
             alert('Email ou mot de passe incorrect.')
         }
