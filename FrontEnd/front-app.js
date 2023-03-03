@@ -122,10 +122,10 @@ generateWorkSheet()
 // Au clic sur le bouton filtre
 onButtonFilterClick()
 
+// Affecter des ancres aux liens clicables
 for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
-
 // Générer ma page de connexion en dynamique
 for (let link of linkers){
     link.addEventListener('click', () => {
@@ -155,7 +155,7 @@ for (let link of linkers){
         }
     })
 }
-
+// Modifier login=>logout et afficher le bouton "modifier"
 for (let link of linkers){
     let logButton = link.getAttribute('data-key')
     if (logButton == 'login' && loggedUserToken !=null){
@@ -164,4 +164,3 @@ for (let link of linkers){
         modifierButton.style.display = ""
     }
 }
-
