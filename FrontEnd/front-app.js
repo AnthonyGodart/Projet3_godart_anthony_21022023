@@ -112,7 +112,9 @@ async function logUser(event){
                 window.location.href = "index.html"
         } else {
             alert('Email ou mot de passe incorrect.')
-                window.sessionStorage.clear()
+            if(loggedUserToken != null){
+                window.sessionStorage.removeItem('token')
+            }
         }
 }
 
@@ -164,3 +166,31 @@ for (let link of linkers){
         modifierButton.style.display = ""
     }
 }
+
+let modal = null
+const modalOpenner = document.querySelector('.js-modal-openner')
+//modalOpenner.addEventListener('click', openModal)
+
+function openModal(e){
+    e.preventDefault()
+    const target = document.querySelector(e.target.getAttribute('href')) 
+    target.style.display = ""
+    target.removeAttribute('aria-hidden')
+    target.setAttribute('aria-modal, true')
+    modal = target
+    modal.addEventListener('click', closeModal)
+    modal.querySelector('.js-close-modal').addEventListener('click', closeModal)
+}
+
+function closeModal(e){
+    if (modal == null) return
+    e.preventDefault() 
+    modal.style.display = "none"
+    modal.setAttribute('aria-hidden', true)
+    modal.removeAttribute('aria-modal')
+    modal.removeEventListener('click', closeModal)
+    modal.querySelector('.js-close-modal').removeEventListener('click', closeModal)
+    modal = null
+}
+
+modalOpenner.addEventListener('click', openModal)

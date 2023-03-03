@@ -3,12 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Sophie Bluel - Architecte d'intérieur</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
+	<link rel="stylesheet" href="./assets/modal-style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer">    
 	<script src="front-app.js" type="module"></script>
 </head>
@@ -37,7 +39,7 @@
 		</article>
 	</section>
 	<section id="portfolio">
-			<h2>Mes Projets <span id="modifier-button" style="display: none;"><i class="fa-regular fa-pen-to-square"></i> modifier </span> </h2>
+		<h2>Mes Projets <a id="modifier-button" class="js-modal-openner" href="#modal-modifier" style="display: none;"><i class="fa-regular fa-pen-to-square"></i> modifier </a> </h2>
 		<nav class="filter-bar">
 			<button class="filter active" type="button" data-key="0">Tous</button>
 			<button class="filter" type="button" data-key="1">Objets</button>
@@ -47,6 +49,15 @@
 		<div class="gallery">
 			<!-- Contenu affiché en dynamique -->
 		</div>
+		<aside id="modal-mofifier" class="modal" aria-hidden="true" role="dialog" 
+    aria-modal="false" aria-labelledby="title-modal" style="display: none;">
+        <div class="modal-wrapper">
+            <i class="fa-regular fa-xmark js-close-modal"></i>
+            <h1 id="title-modal">Galerie Photo</h1>
+            <div class="gallery">
+                <!-- Contenu affiché en dynamique -->
+            </div>
+        </div>
 	</section>
 	<section id="contact">
 		<h2>Contact</h2>
