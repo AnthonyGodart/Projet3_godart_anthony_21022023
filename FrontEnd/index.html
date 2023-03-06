@@ -10,11 +10,14 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<link rel="stylesheet" href="./assets/modal-style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer">    
 	<script src="front-app.js" type="module"></script>
 </head>
 <body>
+	<div class="edit-mode" style="display: none;">
+		<p class="editing"><i class="fa-regular fa-pen-to-square"></i> Mode édition </p>
+		<button class="publish">publier les changements</button>
+	</div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
@@ -38,8 +41,13 @@
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
 	</section>
+
 	<section id="portfolio">
-		<h2>Mes Projets <a id="modifier-button" class="js-modal-openner" href="#modal-modifier" style="display: none;"><i class="fa-regular fa-pen-to-square"></i> modifier </a> </h2>
+		<h2> Mes Projets 
+			<a id="modifier-button" class="modal-btn modal-trigger" style="display: none;">
+				<i class="fa-regular fa-pen-to-square"></i> modifier 
+			</a> 
+		</h2>
 		<nav class="filter-bar">
 			<button class="filter active" type="button" data-key="0">Tous</button>
 			<button class="filter" type="button" data-key="1">Objets</button>
@@ -49,15 +57,20 @@
 		<div class="gallery">
 			<!-- Contenu affiché en dynamique -->
 		</div>
-		<aside id="modal-mofifier" class="modal" aria-hidden="true" role="dialog" 
-    aria-modal="false" aria-labelledby="title-modal" style="display: none;">
-        <div class="modal-wrapper">
-            <i class="fa-regular fa-xmark js-close-modal"></i>
-            <h1 id="title-modal">Galerie Photo</h1>
-            <div class="gallery">
-                <!-- Contenu affiché en dynamique -->
-            </div>
-        </div>
+		<div class="modal-container">
+        	<div class="overlay modal-trigger"></div>
+			<div class="modal" role="dialog" aria-labelledby="title-modal">
+            	<i class="fa-regular fa-x close-modal modal-trigger" aria-label="close modal"></i>
+            	<h2 class="title-modal">Galerie Photos</h2>
+            	<div class="">
+                <p>Dans cette div, on aura l'affichage de des éléments de la galerie. <br>
+					Mais pour le moment, on se concentre sur la modale.
+				</p>
+            	</div>
+				<button class="form-button">Ajouter une photo</button>
+				<a href="" class="erase-link">Supprimer la galerie</a>
+        	</div>
+		</div>
 	</section>
 	<section id="contact">
 		<h2>Contact</h2>

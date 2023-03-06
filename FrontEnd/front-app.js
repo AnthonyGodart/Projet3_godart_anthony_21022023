@@ -1,7 +1,9 @@
 // Déclaration des variables globales
 // Initialiser des listeners
 let clickedButtonId = 0
-let clickedLink = 0
+let clickedLink = 0   
+// Récupérer la barre du mode "édition"
+const editBar = document.querySelector('.edit-mode')
 // Récupérer le token
 let loggedUserToken = sessionStorage.getItem('token')
 // Récupérer les boutons de la filter-bar
@@ -148,6 +150,7 @@ for (let link of linkers){
             link.innerText = "login"
             window.sessionStorage.removeItem('token')
             modifierButton.style.display = "none"
+            editBar.style.display = "none"
         } else {
             document.addEventListener('click', (e) =>{
                 if(e.target.innerText !== "login"){
@@ -159,38 +162,23 @@ for (let link of linkers){
 }
 // Modifier login=>logout et afficher le bouton "modifier"
 for (let link of linkers){
-    let logButton = link.getAttribute('data-key')
+    const logButton = link.getAttribute('data-key')
+
     if (logButton == 'login' && loggedUserToken !=null){
         link.setAttribute('data-key', 'logout')
         link.innerText = 'logout'
         modifierButton.style.display = ""
+        editBar.style.display = ""
     }
 }
 
-let modal = null
-const modalOpenner = document.querySelector('.js-modal-openner')
-//modalOpenner.addEventListener('click', openModal)
+// Gérer la modale
 
-function openModal(e){
-    e.preventDefault()
-    const target = document.querySelector(e.target.getAttribute('href')) 
-    target.style.display = ""
-    target.removeAttribute('aria-hidden')
-    target.setAttribute('aria-modal, true')
-    modal = target
-    modal.addEventListener('click', closeModal)
-    modal.querySelector('.js-close-modal').addEventListener('click', closeModal)
+const modalContainer = document.querySelector(".modal-container")
+const modalTriggers = document.querySelectorAll(".modal-trigger")
+
+modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
+
+function toggleModal(){
+    modalContainer.classList.toggle("displayed")
 }
-
-function closeModal(e){
-    if (modal == null) return
-    e.preventDefault() 
-    modal.style.display = "none"
-    modal.setAttribute('aria-hidden', true)
-    modal.removeAttribute('aria-modal')
-    modal.removeEventListener('click', closeModal)
-    modal.querySelector('.js-close-modal').removeEventListener('click', closeModal)
-    modal = null
-}
-
-modalOpenner.addEventListener('click', openModal)

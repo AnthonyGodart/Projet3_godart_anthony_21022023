@@ -50,36 +50,35 @@ table {
 body {
 	max-width: 1140px;
 	margin:auto;
-	font-family: 'Work Sans' ;
+	font-family: 'Work Sans', sans-serif;
 	font-size: 14px;
 }
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
 }
 section {
-	margin: 50px 0
+	margin: 50px 0;
 }
 
 h1{
 	display: flex;
 	flex-direction: column;
-	font-family: 'Syne';
+	font-family: 'Syne', sans-serif;
 	font-size: 22px;
 	font-weight: 800;
 	color: #B1663C
 }
 
 h1 > span {
-	font-family: 'Work Sans';
+	font-family: 'Work Sans', sans-serif;
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
-	font-family: 'Syne';
+	font-family: 'Syne', sans-serif;
 	font-weight: 700;
 	font-size: 30px;
 	color: #1D6154
@@ -103,6 +102,25 @@ li:hover {
 	color: black;
 	font-weight: 800;
 }
+.edit-mode{
+	width: 100%;
+	overflow: visible;
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: black;
+	color: #FFFFFF;
+}
+.editing{
+	padding: 10px;
+}
+.publish{
+	padding: 10px;
+	border-radius: 20px;
+	cursor: pointer;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -135,12 +153,13 @@ li:hover {
 	justify-content: center;
 }
 #modifier-button{
-	font-family: 'Work Sans';
+	font-family: 'Work Sans', sans-serif;
 	text-decoration: none;
 	font-size: 14px;
 	font-weight: 400;
 	color: black;
 	padding-left: 30px;
+	cursor: pointer;
 }
 .filter-bar{
 	display: flex;
@@ -173,6 +192,59 @@ li:hover {
 	width: 100%;
 
 }
+/** CSS de la modale de modification **/
+.modal-container{
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.modal-container.displayed{
+	display: block;
+}
+.overlay{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #333333D3;
+}
+.modal{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 10px;
+	padding: 20px;
+	width: 50%;
+	background: #FFF;
+	transform: translate(50%, 50%);
+}
+.title-modal{
+	font-family: 'Work Sans', sans-serif;
+	padding: 10px;
+	color: black;
+	font-size: 30px;
+	font-weight: 300;
+}
+.close-modal{
+	padding: 10px 10px;
+	border: none;
+	font-size: 20px;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}
+.erase-link{
+	color: #B1663C;
+	text-decoration: underline;
+	padding: 5px;
+}
+
+
+
+/** Fin du CSS pour la modale*/
 #contact {
 	width: 50%;
 margin: auto;
