@@ -1,23 +1,30 @@
+// Récupérer les données du Back-end
+const workList =
+    await fetch("http://localhost:5678/api/works")
+    .then(workList => workList.json())
+
 // Déclaration des variables globales
 // Initialiser des listeners
 let clickedButtonId = 0
-let clickedLink = 0   
-// Récupérer la barre du mode "édition"
-const editBar = document.querySelector('.edit-mode')
-// Récupérer le token
-let loggedUserToken = sessionStorage.getItem('token')
+let clickedLink = 0
+
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
 // Récupérer les liens "projets", "contact" etc...
 const linkers = [...document.querySelectorAll('li')]
-// Récupérer le bouton modifier
-let modifierButton = document.getElementById('modifier-button')
+// Ajouter un écouteur d'événements à chaque "lien"
+linkers.forEach(link => {
+    link.addEventListener('click', () => handleLinkClick(link))
+})
 // Pour leur attribuer des ancres plus tard
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
-// Récupérer les données du Back-end
-const workList =
-    await fetch("http://localhost:5678/api/works")
-    .then(workList => workList.json());
+
+// Récupérer le token
+let loggedUserToken = sessionStorage.getItem('token')
+// Récupérer la barre du mode "édition"
+const editBar = document.querySelector('.edit-mode')
+// Récupérer le bouton modifier
+let modifierButton = document.getElementById('modifier-button')
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -39,7 +46,7 @@ async function generateWorkSheet(){
         gallery.appendChild(workElement)
     }
 }
-// J'adapte generateWorkSheet() pour qu'il n'affiche que les fiches triées : OK
+// Adapter generateWorkSheet() pour qu'il n'affiche que les fiches triées : OK
 async function filterSheet() {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
@@ -59,7 +66,7 @@ async function filterSheet() {
         gallery.appendChild(workElement);
     }
 }
-// Je change les couleurs des boutons : OK
+// Je change les couleurs des boutons de la barre de filtres: OK
 function changeFilterButtonStyle(button){
     if(button.classList.contains("active")){
         return
@@ -131,34 +138,31 @@ for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
 // Générer ma page de connexion en dynamique
-for (let link of linkers){
-    link.addEventListener('click', () => {
-        if (link.innerText == "login"){
-            const sections = document.querySelectorAll('section')
-            for (let section of sections){
-                const loginPage = document.getElementById("login-page")
-                const sectionId = section.getAttribute('id')
-                if(!section.style.display && sectionId != loginPage.id){
-                    section.style.display = "none"
-                }
-                loginPage.style.display = ""
-            }            
-            const loginForm = document.getElementById('login-form')
-            loginForm.addEventListener("submit", logUser)
-        } else if(link.innerText == 'logout'){
-            link.setAttribute('data-key', 'login')
-            link.innerText = "login"
-            window.sessionStorage.removeItem('token')
-            modifierButton.style.display = "none"
-            editBar.style.display = "none"
-        } else {
-            document.addEventListener('click', (e) =>{
-                if(e.target.innerText !== "login"){
-                    window.location.href = "index.html"
-                }
-            })
-        }
-    })
+const handleLinkClick = (link) => {
+    if (link.innerText == "login") {
+        // Cacher toutes les sections sauf la page de connexion
+        const loginPage = document.getElementById("login-page")
+        const sections = document.querySelectorAll('section:not(#login-page)')
+        sections.forEach(section => section.style.display = "none")
+        loginPage.style.display = ""
+        // Ajouter un événement de soumission du formulaire de connexion
+        const loginForm = document.getElementById('login-form')
+        loginForm.addEventListener("submit", logUser)
+    } else if (link.innerText == 'logout') {
+        // Réinitialiser le lien de connexion et supprimer le token de session
+        link.setAttribute('data-key', 'login')
+        link.innerText = "login"
+        window.sessionStorage.removeItem('token')
+        modifierButton.style.display = "none"
+        editBar.style.display = "none"
+    } else {
+        // Rediriger vers la page d'accueil si un autre lien est cliqué
+        document.addEventListener('click', (e) =>{
+            if(e.target.innerText !== "login"){
+                window.location.href = "index.html"
+            }
+        })
+    }
 }
 // Modifier login=>logout et afficher le bouton "modifier"
 for (let link of linkers){
@@ -181,4 +185,21 @@ modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 
 function toggleModal(){
     modalContainer.classList.toggle("displayed")
+    /**const galleryModal = document.querySelector(".gallery-modal")
+    galleryModal.innerHTML = ''
+
+    for ( let i = 0; i < workList.length; i ++){
+        const workElement = document.createElement("figure")
+        const imageElement = document.createElement("img")
+        imageElement.src = workList[i].imageUrl
+        workElement.appendChild(imageElement)
+        const titleElement = document.createElement("figcaption")
+        titleElement.innerText = workList[i].title
+        workElement.appendChild(titleElement)
+        workElement.classList.add("sheet")
+        const workSheetId = workList[i].categoryId
+        workElement.dataset.id = workSheetId
+        workElement.style.transform = 'scale(0.2)'
+        galleryModal.appendChild(workElement)
+    }*/
 }

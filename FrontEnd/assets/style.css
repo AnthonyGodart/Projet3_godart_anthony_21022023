@@ -102,9 +102,9 @@ li:hover {
 	color: black;
 	font-weight: 800;
 }
+/** CSS de la barre d'édition */
 .edit-mode{
 	width: 100%;
-	overflow: visible;
 	height: 50px;
 	display: flex;
 	justify-content: center;
@@ -120,7 +120,7 @@ li:hover {
 	border-radius: 20px;
 	cursor: pointer;
 }
-
+/** CSS de l'introduction */
 #introduction {
 	display: flex;
 	align-items: center;
@@ -133,18 +133,16 @@ li:hover {
 	margin: auto;
 	width: 80%;
 }
-
 #introduction article {
 	flex: 1
 }
 #introduction h2 {
 	margin-bottom: 1em;
 }
-
 #introduction p {
 	margin-bottom: 0.5em;
 }
-
+/** CSS du portfolio */
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
@@ -175,6 +173,7 @@ li:hover {
 	height: 36px;
 	border: 3px solid #1D6154;
 	border-radius: 60px;
+	cursor: pointer;
 }
 .active{
 	background-color: #1D6154;
@@ -187,10 +186,8 @@ li:hover {
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 }
-
 .gallery img {
 	width: 100%;
-
 }
 /** CSS de la modale de modification **/
 .modal-container{
@@ -198,8 +195,8 @@ li:hover {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 }
 .modal-container.displayed{
 	display: block;
@@ -211,14 +208,18 @@ li:hover {
 	background: #333333D3;
 }
 .modal{
+	overflow: auto;
+	position: absolute;
+	top: 20%;
+	left: 25%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	border-radius: 10px;
 	padding: 20px;
-	width: 50%;
+	width: 95%;
+	max-width: 630px;
 	background: #FFF;
-	transform: translate(50%, 50%);
 }
 .title-modal{
 	font-family: 'Work Sans', sans-serif;
@@ -226,6 +227,9 @@ li:hover {
 	color: black;
 	font-size: 30px;
 	font-weight: 300;
+}
+.gallery-modal{
+	display: grid;
 }
 .close-modal{
 	padding: 10px 10px;
@@ -236,15 +240,18 @@ li:hover {
 	right: 10px;
 	cursor: pointer;
 }
+.modal-separate-bar{
+	background: #B3B3B3;
+	width: 60%;
+	height: 3px;
+	margin: 17px;
+}
 .erase-link{
 	color: #B1663C;
 	text-decoration: underline;
-	padding: 5px;
+	padding: 10px;
 }
-
-
-
-/** Fin du CSS pour la modale*/
+/** CSS du formulaire de contact */
 #contact {
 	width: 50%;
 margin: auto;
@@ -262,7 +269,6 @@ margin: auto;
 	display: flex;
 	flex-direction: column;
 }
-
 #contact input {
 	height: 50px;
 	font-size: 1.2em;
@@ -276,9 +282,8 @@ margin: auto;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-
 input[type="submit"]{
-	font-family: 'Syne';
+	font-family: 'Syne', sans-serif;
 	font-weight: 700;
 	color: white;
 	background-color: #1D6154;
@@ -287,7 +292,7 @@ input[type="submit"]{
 	text-align: center;
 	border-radius: 60px ;
 }
-
+/** CSS de la login-page */
 .login-page{
 	display: flex;
 	flex-direction: column;
@@ -296,7 +301,7 @@ input[type="submit"]{
 	margin: 30px;
 }
 .login-title{
-	font-family: 'Syne';
+	font-family: 'Syne', sans-serif;
 	font-size: 30px;
 	font-weight: 700;
 	padding: 20px;
@@ -326,7 +331,8 @@ input[type="submit"]{
 	border: 3px solid #1D6154;
 	border-radius: 60px;
 	padding: 10px;
-	margin-top: 20px;
+	margin: 20px;
+	cursor: pointer;
 }
 .forgottenPasswordLink{
 	padding: 20px;
@@ -334,9 +340,9 @@ input[type="submit"]{
 	text-align: center;
 	text-decoration: underline;
 }
+/** CSS du footer*/
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
 }
-
