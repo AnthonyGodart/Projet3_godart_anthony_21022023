@@ -20,11 +20,14 @@ linkers.forEach(link => {
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 
 // Récupérer le token
-let loggedUserToken = sessionStorage.getItem('token')
+const loggedUserToken = sessionStorage.getItem('token')
 // Récupérer la barre du mode "édition"
 const editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
-let modifierButtons = document.querySelectorAll('.modifier-button')
+const modifierButtons = document.querySelectorAll('.modifier-button')
+// Récupérer le bouton pour supprimer
+const deleteButtons = document.querySelectorAll('.delete-button')
+
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -126,7 +129,52 @@ async function logUser(event){
             }
         }
 }
-
+// Gérer l'affichage des projets dans la modale
+function generateModifiableWorkList(){
+    const galleryModal = document.querySelector(".gallery-modal")
+    galleryModal.innerHTML = ''
+    for ( let i = 0; i < workList.length; i ++){
+        const workElement = document.createElement("figure")
+            const trashCan = document.createElement('i')
+                    trashCan.classList = "fa-sharp fa-solid fa-trash-can delete-button"
+                    trashCan.style.fontSize = "9em"
+                    trashCan.style.position = "fixed"
+                    trashCan.style.top = "30px"
+                    trashCan.style.right = "20px"
+                    trashCan.style.color = "white"
+                    trashCan.style.background = "black"
+                    trashCan.style.cursor = "pointer"
+            workElement.appendChild(trashCan)
+            const dragCross = document.createElement('i')
+            workElement.addEventListener('mouseover', () => {                
+                    dragCross.classList = "fa-solid fa-arrows-up-down-left-right"
+                    dragCross.style.fontSize = "9em"
+                    dragCross.style.position = "fixed"
+                    dragCross.style.top = "30px"
+                    dragCross.style.right = "150px"
+                    dragCross.style.color = "white"
+                    dragCross.style.background = "black"
+                    dragCross.style.display = ""
+                workElement.appendChild(dragCross)
+            })
+            workElement.addEventListener('mouseout', () => {
+                dragCross.style.display = "none"
+            })
+            const imageElement = document.createElement("img")
+                imageElement.src = workList[i].imageUrl
+            workElement.appendChild(imageElement)
+            const titleElement = document.createElement("figcaption")
+                titleElement.innerText = "éditer"
+                titleElement.dataset.id = workList[i].id
+                titleElement.style.fontSize = "9em"
+            workElement.appendChild(titleElement)
+            workElement.classList.add("sheet")
+            const workSheetId = workList[i].categoryId
+                workElement.dataset.id = workSheetId
+        workElement.style.transform = 'scale(0.12)'
+        galleryModal.appendChild(workElement)
+        }
+    }
 // Appel des fonctions
 // A la première ouverture de la page web ou à son rechargement
 generateWorkSheet()
@@ -187,47 +235,5 @@ modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 
 function toggleModal(){
     modalContainer.classList.toggle("displayed")
-    const galleryModal = document.querySelector(".gallery-modal")
-    galleryModal.innerHTML = ''
-
-    for ( let i = 0; i < workList.length; i ++){
-        const workElement = document.createElement("figure")
-            const trashCan = document.createElement('i')
-                    trashCan.classList = "fa-sharp fa-solid fa-trash-can"
-                    trashCan.style.fontSize = "9em"
-                    trashCan.style.position = "fixed"
-                    trashCan.style.top = "30px"
-                    trashCan.style.right = "20px"
-                    trashCan.style.color = "white"
-                    trashCan.style.background = "black"
-            workElement.appendChild(trashCan)
-            const dragCross = document.createElement('i')
-            workElement.addEventListener('mouseover', () => {                
-                    dragCross.classList = "fa-solid fa-arrows-up-down-left-right"
-                    dragCross.style.fontSize = "9em"
-                    dragCross.style.position = "fixed"
-                    dragCross.style.top = "30px"
-                    dragCross.style.right = "150px"
-                    dragCross.style.color = "white"
-                    dragCross.style.background = "black"
-                    dragCross.style.display = ""
-                workElement.appendChild(dragCross)
-            })
-            workElement.addEventListener('mouseout', () => {
-                dragCross.style.display = "none"
-            })
-            const imageElement = document.createElement("img")
-                imageElement.src = workList[i].imageUrl
-            workElement.appendChild(imageElement)
-            const titleElement = document.createElement("figcaption")
-                titleElement.innerText = "éditer"
-                titleElement.dataset.id = workList[i].id
-                titleElement.style.fontSize = "9em"
-            workElement.appendChild(titleElement)
-            workElement.classList.add("sheet")
-            const workSheetId = workList[i].categoryId
-                workElement.dataset.id = workSheetId
-        workElement.style.transform = 'scale(0.12)'
-        galleryModal.appendChild(workElement)
-    }
+    generateModifiableWorkList();
 }
