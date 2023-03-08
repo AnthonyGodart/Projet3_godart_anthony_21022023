@@ -33,8 +33,13 @@
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
+			<a class="modifier-button figure" style="display: none;">
+				<i class="fa-regular fa-pen-to-square"></i> modifier
+			</a>
 		</figure>
 		<article>
+			<a class="modifier-button article" style="display: none;">
+				<i class="fa-regular fa-pen-to-square"></i> modifier</a>
 			<h2>Designer d'espace</h2>
 			<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
 			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
@@ -43,11 +48,12 @@
 	</section>
 
 	<section id="portfolio">
-		<h2> Mes Projets 
-			<a id="modifier-button" class="modal-btn modal-trigger" style="display: none;">
+		<div class="portfolio-title">
+			<h2> Mes Projets </h2>
+			<a class="modifier-button modal-btn modal-trigger" style="display: none;">
 				<i class="fa-regular fa-pen-to-square"></i> modifier 
-			</a> 
-		</h2>
+			</a>
+		</div>
 		<nav class="filter-bar">
 			<button class="filter active" type="button" data-key="0">Tous</button>
 			<button class="filter" type="button" data-key="1">Objets</button>
@@ -65,9 +71,14 @@
             	<div class="gallery-modal test">
             	</div>
 				<span class="modal-separate-bar"></span>
-				<button class="form-button">Ajouter une photo</button>
+				<button class="form-button add-photo">Ajouter une photo</button>
 				<a href="" class="erase-link">Supprimer la galerie</a>
         	</div>
+			<div class="modal2" role="dialog" aria-labelledby="title-modal2" style="display: none;">
+				<i class="fa-solid fa-arrow-left return-arrow"></i>
+				<i class="fa-regular fa-x close-modal modal-trigger" aria-label="close modal"></i>
+
+			</div>
 		</div>
 	</section>
 	<section id="contact">

@@ -24,7 +24,7 @@ let loggedUserToken = sessionStorage.getItem('token')
 // Récupérer la barre du mode "édition"
 const editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
-let modifierButton = document.getElementById('modifier-button')
+let modifierButtons = document.querySelectorAll('.modifier-button')
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -153,7 +153,8 @@ const handleLinkClick = (link) => {
         link.setAttribute('data-key', 'login')
         link.innerText = "login"
         window.sessionStorage.removeItem('token')
-        modifierButton.style.display = "none"
+        modifierButtons.forEach(modifierButton =>
+            modifierButton.style.display = "none")
         editBar.style.display = "none"
     } else {
         // Rediriger vers la page d'accueil si un autre lien est cliqué
@@ -171,35 +172,62 @@ for (let link of linkers){
     if (logButton == 'login' && loggedUserToken !=null){
         link.setAttribute('data-key', 'logout')
         link.innerText = 'logout'
-        modifierButton.style.display = ""
+        modifierButtons.forEach(modifierButton =>
+            modifierButton.style.display = "")
         editBar.style.display = ""
     }
 }
 
 // Gérer la modale
-
 const modalContainer = document.querySelector(".modal-container")
 const modalTriggers = document.querySelectorAll(".modal-trigger")
+const modalBox = document.querySelector(".modal")
 
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 
 function toggleModal(){
     modalContainer.classList.toggle("displayed")
-    /**const galleryModal = document.querySelector(".gallery-modal")
+    const galleryModal = document.querySelector(".gallery-modal")
     galleryModal.innerHTML = ''
 
     for ( let i = 0; i < workList.length; i ++){
         const workElement = document.createElement("figure")
-        const imageElement = document.createElement("img")
-        imageElement.src = workList[i].imageUrl
-        workElement.appendChild(imageElement)
-        const titleElement = document.createElement("figcaption")
-        titleElement.innerText = workList[i].title
-        workElement.appendChild(titleElement)
-        workElement.classList.add("sheet")
-        const workSheetId = workList[i].categoryId
-        workElement.dataset.id = workSheetId
-        workElement.style.transform = 'scale(0.2)'
+            const trashCan = document.createElement('i')
+                    trashCan.classList = "fa-sharp fa-solid fa-trash-can"
+                    trashCan.style.fontSize = "9em"
+                    trashCan.style.position = "fixed"
+                    trashCan.style.top = "30px"
+                    trashCan.style.right = "20px"
+                    trashCan.style.color = "white"
+                    trashCan.style.background = "black"
+            workElement.appendChild(trashCan)
+            const dragCross = document.createElement('i')
+            workElement.addEventListener('mouseover', () => {                
+                    dragCross.classList = "fa-solid fa-arrows-up-down-left-right"
+                    dragCross.style.fontSize = "9em"
+                    dragCross.style.position = "fixed"
+                    dragCross.style.top = "30px"
+                    dragCross.style.right = "150px"
+                    dragCross.style.color = "white"
+                    dragCross.style.background = "black"
+                    dragCross.style.display = ""
+                workElement.appendChild(dragCross)
+            })
+            workElement.addEventListener('mouseout', () => {
+                dragCross.style.display = "none"
+            })
+            const imageElement = document.createElement("img")
+                imageElement.src = workList[i].imageUrl
+            workElement.appendChild(imageElement)
+            const titleElement = document.createElement("figcaption")
+                titleElement.innerText = "éditer"
+                titleElement.dataset.id = workList[i].id
+                titleElement.style.fontSize = "9em"
+            workElement.appendChild(titleElement)
+            workElement.classList.add("sheet")
+            const workSheetId = workList[i].categoryId
+                workElement.dataset.id = workSheetId
+        workElement.style.transform = 'scale(0.12)'
         galleryModal.appendChild(workElement)
-    }*/
+    }
 }
