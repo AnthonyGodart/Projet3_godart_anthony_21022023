@@ -25,8 +25,6 @@ const loggedUserToken = sessionStorage.getItem('token')
 const editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
 const modifierButtons = document.querySelectorAll('.modifier-button')
-// Récupérer le bouton pour supprimer
-
 // Récupérer le bouton pour ajouter un projet
 const projectAdder = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
@@ -207,10 +205,33 @@ function generateModifiableWorkList(){
         workElement.style.transform = 'scale(0.12)'
         galleryModal.appendChild(workElement)
         }
-    }
-function eraseSelectedWork(){
-    alert('Voulez-vous vraiment supprimer ce projet ?')
 }
+// Créer la fonction de suppression d'un projet par Id
+function eraseSelectedWork(deleteButton){
+    const workToDeleteId = deleteButton.id
+    fetch(`http://localhost:5678/works/${workToDeleteId}`, {
+    method: 'DELETE'
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('La ressource a été supprimée avec succès');
+        } else {
+            console.log('La suppression de la ressource a échoué');
+        }
+    })
+    .catch(error => {
+        console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error);
+    });
+}
+// Créer la fonction pour supprimer tous les projets
+function eraseAllWorks(){
+    alert('Voulez-vous vraiment supprimer tous les projets ?')
+}
+// Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet
+function openNewProjectModal(){
+    alert('Vous allez ajouter un nouveau projet')
+}
+
 // Appel des fonctions
 // A la première ouverture de la page web ou à son rechargement
 generateWorkSheet()
@@ -252,11 +273,7 @@ async function toggleModal(){
 }
 
 // Ecouter le click sur le bouton Ajouter une photo
-projectAdder.addEventListener('click', () => {
-    alert('Voulez-vous ajouter un nouveau projet ?')
-})
+projectAdder.addEventListener('click', openNewProjectModal)
 
 // Ecouter le click sur le lien Supprimer la galerie
-eraseAllLink.addEventListener('click', () => {
-    alert('Voulez-vous vraiment supprimer tous les projets ?')
-})
+eraseAllLink.addEventListener('click', eraseAllWorks)
