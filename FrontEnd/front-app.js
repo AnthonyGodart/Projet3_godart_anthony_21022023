@@ -26,8 +26,11 @@ const editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
 const modifierButtons = document.querySelectorAll('.modifier-button')
 // Récupérer le bouton pour supprimer
-const deleteButtons = document.querySelectorAll('.delete-button')
 
+// Récupérer le bouton pour ajouter un projet
+const projectAdder = document.querySelector('.add-photo')
+// Récupérer le lien pour supprimer toute la galerie
+const eraseAllLink = document.querySelector('.erase-link')
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -99,6 +102,34 @@ function onButtonFilterClick(){
         });
     }
 }
+// Générer ma page de connexion en dynamique
+const handleLinkClick = (link) => {
+    if (link.innerText == "login") {
+        // Cacher toutes les sections sauf la page de connexion
+        const loginPage = document.getElementById("login-page")
+        const sections = document.querySelectorAll('section:not(#login-page)')
+        sections.forEach(section => section.style.display = "none")
+        loginPage.style.display = ""
+        // Ajouter un événement de soumission du formulaire de connexion
+        const loginForm = document.getElementById('login-form')
+        loginForm.addEventListener("submit", logUser)
+    } else if (link.innerText == 'logout') {
+        // Réinitialiser le lien de connexion et supprimer le token de session
+        link.setAttribute('data-key', 'login')
+        link.innerText = "login"
+        window.sessionStorage.removeItem('token')
+        modifierButtons.forEach(modifierButton =>
+            modifierButton.style.display = "none")
+        editBar.style.display = "none"
+    } else {
+        // Rediriger vers la page d'accueil si un autre lien est cliqué
+        document.addEventListener('click', (e) =>{
+            if(e.target.innerText !== "login"){
+                window.location.href = "index.html"
+            }
+        })
+    }
+}
 // Gérer la fonction de connexion de l'utilisateur
 async function logUser(event){
     event.preventDefault();
@@ -144,6 +175,7 @@ function generateModifiableWorkList(){
                     trashCan.style.color = "white"
                     trashCan.style.background = "black"
                     trashCan.style.cursor = "pointer"
+                    trashCan.setAttribute('data-id', workList[i].id)
             workElement.appendChild(trashCan)
             const dragCross = document.createElement('i')
             workElement.addEventListener('mouseover', () => {                
@@ -167,14 +199,18 @@ function generateModifiableWorkList(){
                 titleElement.innerText = "éditer"
                 titleElement.dataset.id = workList[i].id
                 titleElement.style.fontSize = "9em"
+                titleElement.style.cursor = "pointer"
             workElement.appendChild(titleElement)
             workElement.classList.add("sheet")
-            const workSheetId = workList[i].categoryId
+            const workSheetId = workList[i].id
                 workElement.dataset.id = workSheetId
         workElement.style.transform = 'scale(0.12)'
         galleryModal.appendChild(workElement)
         }
     }
+function eraseSelectedWork(){
+    alert('Voulez-vous vraiment supprimer ce projet ?')
+}
 // Appel des fonctions
 // A la première ouverture de la page web ou à son rechargement
 generateWorkSheet()
@@ -185,34 +221,7 @@ onButtonFilterClick()
 for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
-// Générer ma page de connexion en dynamique
-const handleLinkClick = (link) => {
-    if (link.innerText == "login") {
-        // Cacher toutes les sections sauf la page de connexion
-        const loginPage = document.getElementById("login-page")
-        const sections = document.querySelectorAll('section:not(#login-page)')
-        sections.forEach(section => section.style.display = "none")
-        loginPage.style.display = ""
-        // Ajouter un événement de soumission du formulaire de connexion
-        const loginForm = document.getElementById('login-form')
-        loginForm.addEventListener("submit", logUser)
-    } else if (link.innerText == 'logout') {
-        // Réinitialiser le lien de connexion et supprimer le token de session
-        link.setAttribute('data-key', 'login')
-        link.innerText = "login"
-        window.sessionStorage.removeItem('token')
-        modifierButtons.forEach(modifierButton =>
-            modifierButton.style.display = "none")
-        editBar.style.display = "none"
-    } else {
-        // Rediriger vers la page d'accueil si un autre lien est cliqué
-        document.addEventListener('click', (e) =>{
-            if(e.target.innerText !== "login"){
-                window.location.href = "index.html"
-            }
-        })
-    }
-}
+
 // Modifier login=>logout et afficher le bouton "modifier"
 for (let link of linkers){
     const logButton = link.getAttribute('data-key')
@@ -233,7 +242,21 @@ const modalBox = document.querySelector(".modal")
 
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 
-function toggleModal(){
+async function toggleModal(){
     modalContainer.classList.toggle("displayed")
-    generateModifiableWorkList();
+    generateModifiableWorkList()
+    const deleteButtons = document.querySelectorAll('.delete-button')
+    // Ecouter le click sur les boutons trash-can en vue de faire la suppression des projets
+    deleteButtons.forEach(deleteButton => 
+        deleteButton.addEventListener('click', eraseSelectedWork))
 }
+
+// Ecouter le click sur le bouton Ajouter une photo
+projectAdder.addEventListener('click', () => {
+    alert('Voulez-vous ajouter un nouveau projet ?')
+})
+
+// Ecouter le click sur le lien Supprimer la galerie
+eraseAllLink.addEventListener('click', () => {
+    alert('Voulez-vous vraiment supprimer tous les projets ?')
+})
