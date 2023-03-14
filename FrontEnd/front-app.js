@@ -28,7 +28,7 @@ const modifierButtons = document.querySelectorAll('.modifier-button')
 // Récupérer le bouton pour ajouter un projet
 const projectAdder = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
-const eraseAllLink = document.querySelector('.erase-link')
+const deleteAllLink = document.querySelector('.delete-link')
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -207,11 +207,9 @@ function generateModifiableWorkList(){
         }
 }
 // Créer la fonction de suppression d'un projet par Id
-function eraseSelectedWork(deleteButton){
+function deleteSelectedWork(){
     const bearer = sessionStorage.getItem('token')
-    const workToDeleteId = deleteButton.getAttribute('data-id')
-    console.log(workToDeleteId)
-    fetch(`http://localhost:5678/api/works/${workToDeleteId}`, {
+    fetch(`http://localhost:5678/api/works/`, {
     method: 'DELETE',
     headers: {
         'accept': '*/*',
@@ -271,15 +269,10 @@ modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 async function toggleModal(){
     modalContainer.classList.toggle("displayed")
     generateModifiableWorkList()
-    const deleteButtons = document.querySelectorAll('.delete-button')
-    // Ecouter le click sur les boutons trash-can en vue de faire la suppression des projets
-    deleteButtons.forEach(deleteButton => {
-        deleteButton.addEventListener('click', eraseSelectedWork)
-    })
 }
 
 // Ecouter le click sur le bouton Ajouter une photo
 projectAdder.addEventListener('click', openNewProjectModal)
 
 // Ecouter le click sur le lien Supprimer la galerie
-eraseAllLink.addEventListener('click', eraseAllWorks)
+deleteAllLink.addEventListener('click', eraseAllWorks)
