@@ -208,10 +208,15 @@ function generateModifiableWorkList(){
 }
 // Créer la fonction de suppression d'un projet par Id
 function eraseSelectedWork(deleteButton){
-    const workToDeleteId = deleteButton.id
-    fetch(`http://localhost:5678/works/${workToDeleteId}`, {
-    method: 'DELETE'
-    })
+    const bearer = sessionStorage.getItem('token')
+    const workToDeleteId = deleteButton.getAttribute('data-id')
+    console.log(workToDeleteId)
+    fetch(`http://localhost:5678/api/works/${workToDeleteId}`, {
+    method: 'DELETE',
+    headers: {
+        'accept': '*/*',
+        'Authorization': bearer
+    }})
     .then(response => {
         if (response.ok) {
             console.log('La ressource a été supprimée avec succès');
@@ -268,8 +273,9 @@ async function toggleModal(){
     generateModifiableWorkList()
     const deleteButtons = document.querySelectorAll('.delete-button')
     // Ecouter le click sur les boutons trash-can en vue de faire la suppression des projets
-    deleteButtons.forEach(deleteButton => 
-        deleteButton.addEventListener('click', eraseSelectedWork))
+    deleteButtons.forEach(deleteButton => {
+        deleteButton.addEventListener('click', eraseSelectedWork)
+    })
 }
 
 // Ecouter le click sur le bouton Ajouter une photo
