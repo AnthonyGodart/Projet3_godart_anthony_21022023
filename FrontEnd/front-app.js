@@ -207,12 +207,11 @@ function generateModifiableWorkList(){
         }
 }
 // Créer la fonction de suppression d'un projet par Id
-function deleteSelectedWork(){
-    const bearer = sessionStorage.getItem('token')
-    fetch(`http://localhost:5678/api/works/`, {
+function deleteSelectedWork(id, bearer){
+    console.log(id)
+    fetch(`http://localhost:5678/api/works/${id}`, {
     method: 'DELETE',
     headers: {
-        'accept': '*/*',
         'Authorization': bearer
     }})
     .then(response => {
@@ -269,6 +268,15 @@ modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 async function toggleModal(){
     modalContainer.classList.toggle("displayed")
     generateModifiableWorkList()
+    const deleteButtons = document.querySelectorAll('.delete-button')
+for ( let deleteButton of deleteButtons){
+    deleteButton.addEventListener('click', () => {
+        let id = deleteButton.getAttribute('data-id')
+        const bearer = sessionStorage.getItem('token')
+        console.log(bearer)
+        deleteSelectedWork(id, bearer)
+    })
+}
 }
 
 // Ecouter le click sur le bouton Ajouter une photo
