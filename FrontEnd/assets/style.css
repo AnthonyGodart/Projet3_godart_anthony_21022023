@@ -235,6 +235,18 @@ li:hover {
 	max-width: 630px;
 	background: #FFF;
 }
+.modal2{
+	position: absolute;
+	top: 10%;
+	left: 25%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 10px;
+	width: 95%;
+	max-width: 630px;
+	background: #FFF;
+}
 .title-modal{
 	font-family: 'Work Sans', sans-serif;
 	padding: 50px 30px;
@@ -253,6 +265,54 @@ li:hover {
 	width: 70%;
 	height: fit-content;
 }
+.add-photo-form{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.preview{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.photo-input-field{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: #E8F1F6;
+	width: 420px;
+	height: 170px;
+}
+.photo-input-button{
+	background: #B9C5CC;
+	color: #306685;
+	min-width: 150px;
+	text-align: center;
+	border-radius: 60px;
+	padding: 10px;
+	margin: 20px;
+	cursor: pointer;
+}
+.frame-picture{
+	font-size: 60px;
+	color: #B9C5CC;
+}
+.title-input-field{
+	display: flex;
+	flex-direction: column;
+	width: 420px;
+}
+.category-input-field{
+	display: flex;
+	flex-direction: column;
+	width: 420px;
+}
+.form-button.inactive{
+	background: #A7A7A7;
+	border: none;
+	pointer-events: none;
+}
 .close-modal{
 	padding: 10px 10px;
 	border: none;
@@ -260,6 +320,15 @@ li:hover {
 	position: absolute;
 	top: 10px;
 	right: 10px;
+	cursor: pointer;
+}
+.return-arrow{
+	padding: 10px 10px;
+	border: none;
+	font-size: 20px;
+	position: absolute;
+	top: 10px;
+	left: 10px;
 	cursor: pointer;
 }
 .modal-separate-bar{
@@ -349,6 +418,7 @@ input[type="submit"]{
 .form-button{
 	background-color: #1D6154;
 	color: #FFFFFF;
+	min-width: 150px;
 	text-align: center;
 	border: 3px solid #1D6154;
 	border-radius: 60px;

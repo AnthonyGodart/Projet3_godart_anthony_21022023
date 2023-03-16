@@ -77,7 +77,34 @@
 			<div class="modal2" role="dialog" aria-labelledby="title-modal2" style="display: none;">
 				<i class="fa-solid fa-arrow-left return-arrow"></i>
 				<i class="fa-regular fa-x close-modal modal-trigger" aria-label="close modal"></i>
-				<h2 class="title-modal">Ajouter une photo</h2>
+				<h2 class="title-modal">Ajout photo</h2>
+				<form id="add-photo-form"class="add-photo-form" method="post">
+					<div class="photo-input-field">
+						<div class="preview">
+							<label for="photo-add-field">
+								<i class="fa-regular fa-image frame-picture"></i>
+							</label>
+							<label for="photo-add-field" class="photo-input-button">+ Ajouter photo</label>
+						</div>
+						<input id="photo-add-field" type="file" name="photo-field" value="" required accept=".jpg, .png" style="opacity: 0;"/>
+						<p>jpg, png : 4Mo max</p>
+					</div>
+					<div class="title-input-field">
+						<label for="title">Titre</label>
+						<input id="photo-title" class="form-field" type="text" name="title" required/>
+					</div>
+					<div class="category-input-field">
+						<label for="category">Catégorie</label>
+						<select id="category-selector" class="form-field" type="select" name="category" required>
+							<option value=""></option>
+							<option value="1">Objets</option>
+							<option value="2">Appartements</option>
+							<option value="3">Hôtels et restaurants</option>
+						</select>
+					</div>
+				</form>
+				<span class="modal-separate-bar"></span>
+				<button id="add-work-button" class="form-button inactive" type="submit" form="add-photo-form">Valider</button>
 			</div>
 		</div>
 	</section>

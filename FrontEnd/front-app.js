@@ -29,6 +29,10 @@ const modifierButtons = document.querySelectorAll('.modifier-button')
 const projectAdder = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
 const deleteAllLink = document.querySelector('.delete-link')
+// Récupérer la flèche de retour
+const returnArrow = document.querySelector('.return-arrow')
+// Récupérer le bouton pour ajouter un nouveau projet
+const addNewWorkButton = document.querySelector('#add-work-button')
 
 // Créer les fonctions
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
@@ -158,6 +162,21 @@ async function logUser(event){
             }
         }
 }
+// Gérer le fonctionnement de la modale
+async function toggleModal(){
+    modalContainer.classList.toggle("displayed")
+    modalBox2.style.display = "none"
+    modalBox.style.display = ""
+    generateModifiableWorkList()
+    const deleteButtons = document.querySelectorAll('.delete-button')
+for ( let deleteButton of deleteButtons){
+    deleteButton.addEventListener('click', () => {
+        let id = deleteButton.getAttribute('data-id')
+        const bearer = sessionStorage.getItem('token')
+        deleteSelectedWork(id, bearer)
+    })
+}
+}
 // Gérer l'affichage des projets dans la modale
 function generateModifiableWorkList(){
     const galleryModal = document.querySelector(".gallery-modal")
@@ -238,7 +257,16 @@ function deleteAllWorks(){
 }
 // Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet
 function openNewProjectModal(){
-    alert('Vous allez ajouter un nouveau projet')
+    modalBox.style.display = "none"
+    modalBox2.style.display = ""
+    returnArrow.addEventListener('click', () =>{
+        modalBox2.style.display = "none"
+        modalBox.style.display = ""
+    })
+}
+// Créer la fonction qui ajoute un nouveau projet
+function validateNewWork(){
+    const addConfirmation = confirm('Voulez-vous valider ce projet ?')
 }
 
 // Appel des fonctions
@@ -269,24 +297,25 @@ for (let link of linkers){
 const modalContainer = document.querySelector(".modal-container")
 const modalTriggers = document.querySelectorAll(".modal-trigger")
 const modalBox = document.querySelector(".modal")
+const modalBox2 = document.querySelector(".modal2")
 
+// Écouter les clics sur les activateurs/désactivateurs de la modale
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
-
-async function toggleModal(){
-    modalContainer.classList.toggle("displayed")
-    generateModifiableWorkList()
-    const deleteButtons = document.querySelectorAll('.delete-button')
-for ( let deleteButton of deleteButtons){
-    deleteButton.addEventListener('click', () => {
-        let id = deleteButton.getAttribute('data-id')
-        const bearer = sessionStorage.getItem('token')
-        deleteSelectedWork(id, bearer)
-    })
-}
-}
 
 // Ecouter le click sur le bouton Ajouter une photo
 projectAdder.addEventListener('click', openNewProjectModal)
 
 // Ecouter le click sur le lien Supprimer la galerie
 deleteAllLink.addEventListener('click', deleteAllWorks)
+
+// Gérer l'affichage du bouton valider et en écouter le click
+const imageField = document.getElementById('photo-add-field')
+const titleField = document.getElementById('photo-title')
+const categoryField = document.getElementById('category-selector')
+console.log(imageField)
+console.log(titleField)
+console.log(categoryField)
+if( !imageField && !titleField && !categoryField){
+    addNewWorkButton.classList.toggle("inactive")
+    addNewWorkButton.addEventListener('click', validateNewWork)
+}
