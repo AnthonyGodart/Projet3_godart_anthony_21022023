@@ -207,26 +207,33 @@ function generateModifiableWorkList(){
         }
 }
 // Créer la fonction de suppression d'un projet par Id
-function deleteSelectedWork(id, bearer){
-    console.log(id)
-    fetch(`http://localhost:5678/api/works/${id}`, {
-    method: 'DELETE',
-    headers: {
-        'Authorization': bearer
-    }})
-    .then(response => {
-        if (response.ok) {
-            console.log('La ressource a été supprimée avec succès');
-        } else {
-            console.log('La suppression de la ressource a échoué');
-        }
-    })
-    .catch(error => {
-        console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error);
-    });
+async function deleteSelectedWork(id, bearer){
+    const deleteConfirmation = confirm( "Êtes-vous sûre de vouloir supprimer ce projet ?")
+    if (deleteConfirmation){
+        await fetch(`http://localhost:5678/api/works/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': '*/*',
+            'Authorization': "Bearer " + bearer,
+        }})
+        .then(response => {
+            if (response.ok) {
+                const selectedSheet = document.getElementsByClassName('sheet')
+                if ( selectedSheet.dataset == id ){
+                    selectedSheet.remove()
+                }
+                console.log('La ressource a été supprimée avec succès');
+            } else {
+                console.log('La suppression de la ressource a échoué');
+            }
+        })
+        .catch(error => {
+            console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error);
+        });
+    }
 }
 // Créer la fonction pour supprimer tous les projets
-function eraseAllWorks(){
+function deleteAllWorks(){
     alert('Voulez-vous vraiment supprimer tous les projets ?')
 }
 // Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet
@@ -273,7 +280,6 @@ for ( let deleteButton of deleteButtons){
     deleteButton.addEventListener('click', () => {
         let id = deleteButton.getAttribute('data-id')
         const bearer = sessionStorage.getItem('token')
-        console.log(bearer)
         deleteSelectedWork(id, bearer)
     })
 }
@@ -283,4 +289,4 @@ for ( let deleteButton of deleteButtons){
 projectAdder.addEventListener('click', openNewProjectModal)
 
 // Ecouter le click sur le lien Supprimer la galerie
-deleteAllLink.addEventListener('click', eraseAllWorks)
+deleteAllLink.addEventListener('click', deleteAllWorks)
