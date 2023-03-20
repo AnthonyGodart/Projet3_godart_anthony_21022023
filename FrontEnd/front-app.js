@@ -1,4 +1,4 @@
-// Récupérer les données du Back-end
+// Récupérer les données du Back-end OK
 const workList =
     await fetch("http://localhost:5678/api/works")
     .then(workList => workList.json())
@@ -104,8 +104,8 @@ function onButtonFilterClick(){
         });
     }
 }
-// Générer ma page de connexion en dynamique
-const handleLinkClick = (link) => {
+// Générer ma page de connexion en dynamique OK
+function handleLinkClick(link){
     if (link.innerText == "login") {
         // Cacher toutes les sections sauf la page de connexion
         const loginPage = document.getElementById("login-page")
@@ -132,7 +132,7 @@ const handleLinkClick = (link) => {
         })
     }
 }
-// Gérer la fonction de connexion de l'utilisateur
+// Gérer la fonction de connexion de l'utilisateur OK
 async function logUser(event){
     event.preventDefault();
     const userLogin = {
@@ -162,7 +162,7 @@ async function logUser(event){
             }
         }
 }
-// Gérer le fonctionnement de la modale
+// Gérer le fonctionnement de la modale OK
 async function toggleModal(){
     modalContainer.classList.toggle("displayed")
     modalBox2.style.display = "none"
@@ -237,10 +237,6 @@ async function deleteSelectedWork(id, bearer){
         }})
         .then(response => {
             if (response.ok) {
-                const selectedSheet = document.getElementsByClassName('sheet')
-                if ( selectedSheet.dataset == id ){
-                    selectedSheet.remove()
-                }
                 console.log('La ressource a été supprimée avec succès');
             } else {
                 console.log('La suppression de la ressource a échoué');
@@ -250,12 +246,13 @@ async function deleteSelectedWork(id, bearer){
             console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error);
         });
     }
+    location.reload()
 }
 // Créer la fonction pour supprimer tous les projets
 function deleteAllWorks(){
     alert('Voulez-vous vraiment supprimer tous les projets ?')
 }
-// Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet
+// Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet OK
 function openNewProjectModal(){
     modalBox.style.display = "none"
     modalBox2.style.display = ""
@@ -264,9 +261,57 @@ function openNewProjectModal(){
         modalBox.style.display = ""
     })
 }
+// Afficher une miniature de l'image sélectionnée pour un nouveau projet OK
+function updateImageFieldDisplay() {
+    while(preview.firstChild) {
+      preview.removeChild(preview.firstChild);
+    }
+    let curFiles = imageField.files;
+    if(curFiles.length === 0) {
+        let para = document.createElement('p');
+        para.textContent = 'No files currently selected for upload';
+        preview.appendChild(para);
+    } else {
+        for (let i = 0; i < curFiles.length; i++) {
+            let image = document.createElement('img');
+            image.src = window.URL.createObjectURL(curFiles[i]);
+            image.style.transform = 'scale(0.15)'
+  
+            preview.appendChild(image);
+        }
+    }
+}
 // Créer la fonction qui ajoute un nouveau projet
-function validateNewWork(){
+function validateNewWork(e){
+    e.preventDefault()
+    const project = new FormData()
+        project.append("image", imageField.files[0])
+        project.append("title", titleField.innerText)
+        project.append("category", categoryField.value)
+        
     const addConfirmation = confirm('Voulez-vous valider ce projet ?')
+
+    if(addConfirmation){
+        fetch('http://localhost:5678/api/works',{
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'multipart/form-data',
+                'Authorization': "Bearer " + loggedUserToken,
+            },
+            body: JSON.stringify(project),
+        })
+        .then(response => {
+            if(response.ok){
+                alert('Le projet a bien été ajouté')
+                window.location.reload()
+            } else {
+                alert('Vous n\'avez pas ajouté ce projet')
+                window.location.href = 'index.html'
+            }
+        })
+        .catch(error => console.log('Il y a une erreur', error))
+    }
 }
 
 // Appel des fonctions
@@ -280,7 +325,7 @@ for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
 
-// Modifier login=>logout et afficher le bouton "modifier"
+// Modifier login=>logout et afficher le bouton "modifier" OK
 for (let link of linkers){
     const logButton = link.getAttribute('data-key')
 
@@ -299,10 +344,10 @@ const modalTriggers = document.querySelectorAll(".modal-trigger")
 const modalBox = document.querySelector(".modal")
 const modalBox2 = document.querySelector(".modal2")
 
-// Écouter les clics sur les activateurs/désactivateurs de la modale
+// Écouter les clics sur les activateurs/désactivateurs de la modale OK
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 
-// Ecouter le click sur le bouton Ajouter une photo
+// Ecouter le click sur le bouton Ajouter une photo OK
 projectAdder.addEventListener('click', openNewProjectModal)
 
 // Ecouter le click sur le lien Supprimer la galerie
@@ -312,10 +357,25 @@ deleteAllLink.addEventListener('click', deleteAllWorks)
 const imageField = document.getElementById('photo-add-field')
 const titleField = document.getElementById('photo-title')
 const categoryField = document.getElementById('category-selector')
-console.log(imageField)
-console.log(titleField)
-console.log(categoryField)
-if( !imageField && !titleField && !categoryField){
-    addNewWorkButton.classList.toggle("inactive")
-    addNewWorkButton.addEventListener('click', validateNewWork)
+const preview = document.querySelector('.preview')
+imageField.addEventListener('change', console.log(imageField.files))
+titleField.addEventListener('change', console.log(titleField.innerText))
+categoryField.addEventListener('change', console.log(categoryField.value))
+// Ecouter l'ajout d'une image pour afficher sa miniature OK
+imageField.addEventListener('change', updateImageFieldDisplay)
+
+// Modifier l'affichage du bouton de validation
+if( !imageField || !titleField || !categoryField){
+    addNewWorkButton.classList.add("inactive")
+} else {
+    addNewWorkButton.classList.remove("inactive")
+    addNewWorkButton.addEventListener('submit', validateNewWork)
 }
+
+// Sécuriser le user input du titre pour éviter l'injection html
+//titleField.addEventListener('input', () => {
+//    if (regex.test(this.value)) {
+//        alert('Veuillez ne pas entrer de code HTML dans ce champ')
+//        this.value = ''
+//    }
+//})

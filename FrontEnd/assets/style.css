@@ -291,7 +291,6 @@ li:hover {
 	text-align: center;
 	border-radius: 60px;
 	padding: 10px;
-	margin: 20px;
 	cursor: pointer;
 }
 .frame-picture{
@@ -302,11 +301,13 @@ li:hover {
 	display: flex;
 	flex-direction: column;
 	width: 420px;
+	padding: 20px;
 }
 .category-input-field{
 	display: flex;
 	flex-direction: column;
 	width: 420px;
+	padding: 20px;
 }
 .form-button.inactive{
 	background: #A7A7A7;
