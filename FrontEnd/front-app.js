@@ -237,6 +237,7 @@ async function deleteSelectedWork(id, bearer){
         }})
         .then(response => {
             if (response.ok) {
+                galleryModal.reload()
                 console.log('La ressource a été supprimée avec succès');
             } else {
                 console.log('La suppression de la ressource a échoué');
@@ -284,27 +285,23 @@ function updateImageFieldDisplay() {
 // Créer la fonction qui ajoute un nouveau projet
 function validateNewWork(e){
     e.preventDefault()
-    const project = new FormData()
-        project.append("image", imageField.files[0])
-        project.append("title", titleField.innerText)
-        project.append("category", categoryField.value)
-        
     const addConfirmation = confirm('Voulez-vous valider ce projet ?')
 
     if(addConfirmation){
         fetch('http://localhost:5678/api/works',{
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-type': 'multipart/form-data',
+                'accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
                 'Authorization': "Bearer " + loggedUserToken,
             },
-            body: JSON.stringify(project),
+            body: new FormData(document.querySelector('add-photo-form')),
         })
         .then(response => {
             if(response.ok){
+                response.json()
                 alert('Le projet a bien été ajouté')
-                window.location.reload()
+                galleryModal.reload()
             } else {
                 alert('Vous n\'avez pas ajouté ce projet')
                 window.location.href = 'index.html'
@@ -358,9 +355,6 @@ const imageField = document.getElementById('photo-add-field')
 const titleField = document.getElementById('photo-title')
 const categoryField = document.getElementById('category-selector')
 const preview = document.querySelector('.preview')
-imageField.addEventListener('change', console.log(imageField.files))
-titleField.addEventListener('change', console.log(titleField.innerText))
-categoryField.addEventListener('change', console.log(categoryField.value))
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
 imageField.addEventListener('change', updateImageFieldDisplay)
 
