@@ -248,7 +248,7 @@ li:hover {
 }
 .title-modal{
 	font-family: 'Work Sans', sans-serif;
-	padding: 50px 30px;
+	padding: 30px;
 	color: black;
 	font-size: 30px;
 	font-weight: 300;
@@ -269,6 +269,11 @@ li:hover {
 	align-items: center;
 }
 .preview{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.preview>div{
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -299,13 +304,13 @@ li:hover {
 	display: flex;
 	flex-direction: column;
 	width: 420px;
-	padding: 20px;
+	padding: 10px;
 }
 .category-input-field{
 	display: flex;
 	flex-direction: column;
 	width: 420px;
-	padding: 20px;
+	padding: 10px;
 }
 .form-button.inactive{
 	background: #A7A7A7;

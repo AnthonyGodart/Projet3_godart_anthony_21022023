@@ -189,7 +189,7 @@ for ( let deleteButton of deleteButtons){
 }
 }
 // Gérer l'affichage des projets dans la modale
-function generateModifiableWorkList(){
+async function generateModifiableWorkList(){
     const galleryModal = document.querySelector(".gallery-modal")
     galleryModal.innerHTML = ''
     for ( let i = 0; i < workList.length; i ++){
@@ -248,6 +248,7 @@ async function deleteSelectedWork(id, bearer){
         }})
         .then(response => {
             if (response.ok) {
+                document.querySelector('.gallery-modal').innerHTML = ''
                 console.log('La ressource a été supprimée avec succès')
             } else {
                 console.log('La suppression de la ressource a échoué')
@@ -257,6 +258,7 @@ async function deleteSelectedWork(id, bearer){
             console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error)
         })
     }
+
 }
 // Créer la fonction pour supprimer tous les projets
 function deleteAllWorks(){
@@ -285,7 +287,7 @@ function updateImageFieldDisplay() {
         for (let i = 0; i < curFiles.length; i++) {
             let image = document.createElement('img');
             image.src = window.URL.createObjectURL(curFiles[i]);
-            image.style.transform = 'scale(0.15)'
+            image.style.transform = 'scale(0.2)'
   
             preview.appendChild(image);
         }
@@ -332,7 +334,6 @@ onButtonFilterClick()
 for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
 }
-
 // Modifier login=>logout et afficher le bouton "modifier" OK
 for (let link of linkers){
     const logButton = link.getAttribute('data-key')
@@ -345,23 +346,18 @@ for (let link of linkers){
         editBar.style.display = ""
     }
 }
-
 // Gérer l'affichage de la barre de filtres OK
 const filterBar = document.querySelector('#filter-bar')
 if(loggedUserToken){
     filterBar.style.display = "none"
 }
 
-
 // Écouter les clics sur les activateurs/désactivateurs de la modale OK
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
-
 // Ecouter le click sur le bouton Ajouter une photo OK
 projectAdder.addEventListener('click', openNewProjectModal)
-
 // Ecouter le click sur le lien Supprimer la galerie
 deleteAllLink.addEventListener('click', deleteAllWorks)
-
 
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
 const preview = document.querySelector('.preview')
