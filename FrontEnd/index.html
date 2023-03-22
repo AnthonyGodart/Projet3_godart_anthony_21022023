@@ -54,7 +54,7 @@
 				<i class="fa-regular fa-pen-to-square"></i> modifier 
 			</a>
 		</div>
-		<nav class="filter-bar">
+		<nav id="filter-bar">
 			<button class="filter active" type="button" data-key="0">Tous</button>
 			<button class="filter" type="button" data-key="1">Objets</button>
 			<button class="filter" type="button" data-key="2">Appartements</button>
@@ -77,7 +77,7 @@
 			<div class="modal2" role="dialog" aria-labelledby="title-modal2" style="display: none;">
 				<i class="fa-solid fa-arrow-left return-arrow"></i>
 				<i class="fa-regular fa-x close-modal modal-trigger" aria-label="close modal"></i>
-				<h2 class="title-modal">Ajout photo</h2>
+				<h2 class="title-modal title-modal2">Ajout photo</h2>
 				<form id="add-photo-form" class="add-photo-form" method="post" enctype="multipart/form-data">
 					<div class="photo-input-field">
 						<div class="preview">
@@ -103,9 +103,9 @@
 							<option value="3">Hôtels et restaurants</option>
 						</select>
 					</div>
-				</form>
 				<span class="modal-separate-bar"></span>
 				<button id="add-work-button" class="form-button inactive" type="submit" form="add-photo-form">Valider</button>
+				</form>
 			</div>
 		</div>
 	</section>

@@ -174,7 +174,7 @@ li:hover {
 	color: black;
 	cursor: pointer;
 }
-.filter-bar{
+#filter-bar{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
@@ -206,7 +206,6 @@ li:hover {
 }
 /** CSS de la modale de modification **/
 .modal-container{
-	overflow: auto;
 	display: none;
 	position: fixed;
 	top: 0;
@@ -256,7 +255,6 @@ li:hover {
 }
 .gallery-modal{
 	position: relative;
-	overflow: auto;
 	display: grid;
 	align-items: center;
 	justify-items: center;

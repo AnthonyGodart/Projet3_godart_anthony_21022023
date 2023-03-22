@@ -1,9 +1,9 @@
+// DECLARATION DES VARIABLES GLOBALES ------------------------------------------------------//
 // Récupérer les données du Back-end OK
 const workList =
     await fetch("http://localhost:5678/api/works")
     .then(workList => workList.json())
 
-// Déclaration des variables globales
 // Initialiser des listeners
 let clickedButtonId = 0
 let clickedLink = 0
@@ -25,6 +25,11 @@ const loggedUserToken = sessionStorage.getItem('token')
 const editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
 const modifierButtons = document.querySelectorAll('.modifier-button')
+// Récupérer les éléments de la modale
+const modalContainer = document.querySelector(".modal-container")
+const modalTriggers = document.querySelectorAll(".modal-trigger")
+const modalBox = document.querySelector(".modal")
+const modalBox2 = document.querySelector(".modal2")
 // Récupérer le bouton pour ajouter un projet
 const projectAdder = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
@@ -33,8 +38,13 @@ const deleteAllLink = document.querySelector('.delete-link')
 const returnArrow = document.querySelector('.return-arrow')
 // Récupérer le bouton pour ajouter un nouveau projet
 const addNewWorkButton = document.querySelector('#add-work-button')
+// Récupérer les éléments du formulaire d'ajout d'une nouvelle photo
+const imageField = document.getElementById('photo-add-field')
+const titleField = document.getElementById('photo-title')
+const categoryField = document.getElementById('category-selector')
 
-// Créer les fonctions
+
+// CREATIONS DES FONCTIONS --------------------------------------------------------------------//
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
 async function generateWorkSheet(){
     const gallery = document.querySelector(".gallery")
@@ -123,6 +133,7 @@ function handleLinkClick(link){
         modifierButtons.forEach(modifierButton =>
             modifierButton.style.display = "none")
         editBar.style.display = "none"
+        filterBar.style.display = ""
     } else {
         // Rediriger vers la page d'accueil si un autre lien est cliqué
         document.addEventListener('click', (e) =>{
@@ -223,11 +234,11 @@ function generateModifiableWorkList(){
                 workElement.dataset.id = workSheetId
         workElement.style.transform = 'scale(0.12)'
         galleryModal.appendChild(workElement)
-        }
+    }
 }
 // Créer la fonction de suppression d'un projet par Id
 async function deleteSelectedWork(id, bearer){
-    const deleteConfirmation = confirm( "Êtes-vous sûre de vouloir supprimer ce projet ?")
+    const deleteConfirmation = confirm("Êtes-vous sûre de vouloir supprimer ce projet ?")
     if (deleteConfirmation){
         await fetch(`http://localhost:5678/api/works/${id}`, {
         method: 'DELETE',
@@ -237,17 +248,15 @@ async function deleteSelectedWork(id, bearer){
         }})
         .then(response => {
             if (response.ok) {
-                galleryModal.reload()
-                console.log('La ressource a été supprimée avec succès');
+                console.log('La ressource a été supprimée avec succès')
             } else {
-                console.log('La suppression de la ressource a échoué');
+                console.log('La suppression de la ressource a échoué')
             }
         })
         .catch(error => {
-            console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error);
-        });
+            console.log('Une erreur s\'est produite lors de la suppression de la ressource :', error)
+        })
     }
-    location.reload()
 }
 // Créer la fonction pour supprimer tous les projets
 function deleteAllWorks(){
@@ -282,41 +291,43 @@ function updateImageFieldDisplay() {
         }
     }
 }
-// Créer la fonction qui ajoute un nouveau projet
-function validateNewWork(e){
+// Créer la fonction qui ajoute un nouveau projet OK
+async function validateNewWork(e){
     e.preventDefault()
-    const addConfirmation = confirm('Voulez-vous valider ce projet ?')
 
+    const newSheet = new FormData()
+    newSheet.append("image", document.getElementById('photo-add-field').files[0])
+    newSheet.append("title", document.getElementById('photo-title').value)
+    newSheet.append("category", document.getElementById('category-selector').value)
+
+    const addConfirmation = confirm('Voulez-vous valider ce projet ?')
     if(addConfirmation){
-        fetch('http://localhost:5678/api/works',{
+        await fetch('http://localhost:5678/api/works',{
             method: 'POST',
             headers: {
-                'accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
                 'Authorization': "Bearer " + loggedUserToken,
             },
-            body: new FormData(document.querySelector('add-photo-form')),
+            body: newSheet,
         })
         .then(response => {
             if(response.ok){
-                response.json()
                 alert('Le projet a bien été ajouté')
-                galleryModal.reload()
             } else {
                 alert('Vous n\'avez pas ajouté ce projet')
-                window.location.href = 'index.html'
             }
         })
         .catch(error => console.log('Il y a une erreur', error))
     }
 }
 
-// Appel des fonctions
+// APPEL DE FONCTIONS -----------------------------------------------------------------------------//
 // A la première ouverture de la page web ou à son rechargement
 generateWorkSheet()
 // Au clic sur le bouton filtre
 onButtonFilterClick()
 
+
+// FEATURES ---------------------------------------------------------------------------------------//
 // Affecter des ancres aux liens clicables
 for (let i = 0; i< linkers.length; i ++){
     linkers[i].setAttribute("href", linkerHref[i]) 
@@ -335,11 +346,12 @@ for (let link of linkers){
     }
 }
 
-// Gérer la modale
-const modalContainer = document.querySelector(".modal-container")
-const modalTriggers = document.querySelectorAll(".modal-trigger")
-const modalBox = document.querySelector(".modal")
-const modalBox2 = document.querySelector(".modal2")
+// Gérer l'affichage de la barre de filtres OK
+const filterBar = document.querySelector('#filter-bar')
+if(loggedUserToken){
+    filterBar.style.display = "none"
+}
+
 
 // Écouter les clics sur les activateurs/désactivateurs de la modale OK
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
@@ -350,12 +362,9 @@ projectAdder.addEventListener('click', openNewProjectModal)
 // Ecouter le click sur le lien Supprimer la galerie
 deleteAllLink.addEventListener('click', deleteAllWorks)
 
-// Gérer l'affichage du bouton valider et en écouter le click
-const imageField = document.getElementById('photo-add-field')
-const titleField = document.getElementById('photo-title')
-const categoryField = document.getElementById('category-selector')
-const preview = document.querySelector('.preview')
+
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
+const preview = document.querySelector('.preview')
 imageField.addEventListener('change', updateImageFieldDisplay)
 
 // Modifier l'affichage du bouton de validation
@@ -363,13 +372,5 @@ if( !imageField || !titleField || !categoryField){
     addNewWorkButton.classList.add("inactive")
 } else {
     addNewWorkButton.classList.remove("inactive")
-    addNewWorkButton.addEventListener('submit', validateNewWork)
+    addNewWorkButton.addEventListener('click', validateNewWork)
 }
-
-// Sécuriser le user input du titre pour éviter l'injection html
-//titleField.addEventListener('input', () => {
-//    if (regex.test(this.value)) {
-//        alert('Veuillez ne pas entrer de code HTML dans ce champ')
-//        this.value = ''
-//    }
-//})
