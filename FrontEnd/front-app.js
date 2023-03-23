@@ -249,6 +249,7 @@ async function deleteSelectedWork(id, bearer){
         .then(response => {
             if (response.ok) {
                 document.querySelector('.gallery-modal').innerHTML = ''
+                document.querySelector('.gallery').innerHTML = ''
                 console.log('La ressource a été supprimée avec succès')
             } else {
                 console.log('La suppression de la ressource a échoué')
@@ -298,7 +299,7 @@ async function validateNewWork(e){
     e.preventDefault()
 
     const newSheet = new FormData()
-    newSheet.append("image", document.getElementById('photo-add-field').files[0])
+    newSheet.append("image", imageField.files[0])
     newSheet.append("title", document.getElementById('photo-title').value)
     newSheet.append("category", document.getElementById('category-selector').value)
 
@@ -315,7 +316,7 @@ async function validateNewWork(e){
             if(response.ok){
                 alert('Le projet a bien été ajouté')
             } else {
-                alert('Vous n\'avez pas ajouté ce projet')
+                alert('Il faut ajouter une photo pour pouvoir ajouter le projet')
             }
         })
         .catch(error => console.log('Il y a une erreur', error))
@@ -363,10 +364,33 @@ deleteAllLink.addEventListener('click', deleteAllWorks)
 const preview = document.querySelector('.preview')
 imageField.addEventListener('change', updateImageFieldDisplay)
 
-// Modifier l'affichage du bouton de validation
-if( !imageField || !titleField || !categoryField){
-    addNewWorkButton.classList.add("inactive")
-} else {
-    addNewWorkButton.classList.remove("inactive")
-    addNewWorkButton.addEventListener('click', validateNewWork)
-}
+// Ecouter le clic sur le bouton de validation
+addNewWorkButton.addEventListener('click', validateNewWork)
+
+
+// Vérifier que les champs soient bien remplis pour activer le bouton de validation
+// Récupération des éléments du formulaire
+const form = document.querySelector('#add-photo-form');
+const photoTitle = form.querySelector('#photo-title');
+const categorySelector = form.querySelector('#category-selector');
+const addButton = form.querySelector('#add-work-button');
+// Ajout d'un gestionnaire d'événements pour la soumission du formulaire
+form.addEventListener('submit', (event) => {
+    // Empêcher la soumission du formulaire si le bouton est désactivé
+    if (addButton.disabled) {
+    event.preventDefault();
+    return false;
+    }
+});
+// Ajout d'un gestionnaire d'événements pour les modifications des champs de formulaire
+form.addEventListener('input', () => {
+    // Vérification des champs de formulaire
+    if (photoTitle.value && categorySelector.value) {
+        addButton.classList.remove('inactive');
+        addButton.disabled = false;
+    } else {
+        addButton.classList.add('inactive');
+        addButton.disabled = true;
+    }
+});
+
