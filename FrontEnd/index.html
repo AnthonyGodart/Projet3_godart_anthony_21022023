@@ -80,20 +80,20 @@
 				<h2 class="title-modal title-modal2">Ajout photo</h2>
 				<form id="add-photo-form" class="add-photo-form" method="post" enctype="multipart/form-data">
 					<div class="preview photo-input-field">
-							<label for="photo-add-field">
-								<i class="fa-regular fa-image frame-picture"></i>
-							</label>
-							<label for="photo-add-field" class="photo-input-button">+ Ajouter photo</label>
-							<p>jpg, png : 4Mo max</p>
-						<input id="photo-add-field" type="file" name="photo-add-field" value="" required accept=".jpg, .png" style="opacity: 0;"/>						
+						<label for="photo-add-field">
+							<i class="fa-regular fa-image frame-picture"></i>
+						</label>
+						<label for="photo-add-field" class="photo-input-button">+ Ajouter photo</label>
+						<input id="photo-add-field" class="reset-input" type="file" name="photo-add-field" value="" required accept=".jpg, .png" style="opacity: 0;"/>
+						<p>jpg, png : 4Mo max</p>						
 					</div>
 					<div class="title-input-field">
 						<label for="title">Titre</label>
-						<input id="photo-title" class="form-field" type="text" name="title" required/>
+						<input id="photo-title" class="form-field reset-input" type="text" name="title" required/>
 					</div>
 					<div class="category-input-field">
 						<label for="category">Catégorie</label>
-						<select id="category-selector" class="form-field" type="select" name="category" required>
+						<select id="category-selector" class="form-field reset-input" type="select" name="category" required>
 							<option value=""></option>
 							<option value="1">Objets</option>
 							<option value="2">Appartements</option>

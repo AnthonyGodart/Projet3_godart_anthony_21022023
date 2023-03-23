@@ -180,13 +180,13 @@ async function toggleModal(){
     modalBox.style.display = ""
     generateModifiableWorkList()
     const deleteButtons = document.querySelectorAll('.delete-button')
-for ( let deleteButton of deleteButtons){
-    deleteButton.addEventListener('click', () => {
-        let id = deleteButton.getAttribute('data-id')
-        const bearer = sessionStorage.getItem('token')
-        deleteSelectedWork(id, bearer)
-    })
-}
+    for ( let deleteButton of deleteButtons){
+        deleteButton.addEventListener('click', () => {
+            let id = deleteButton.getAttribute('data-id')
+            const bearer = sessionStorage.getItem('token')
+            deleteSelectedWork(id, bearer)
+        })
+    }
 }
 // Gérer l'affichage des projets dans la modale
 async function generateModifiableWorkList(){
@@ -246,7 +246,7 @@ async function deleteSelectedWork(id, bearer){
             'Accept': '*/*',
             'Authorization': "Bearer " + bearer,
         }})
-        .then(response => {
+        .then(async response => {
             if (response.ok) {
                 document.querySelector('.gallery-modal').innerHTML = ''
                 document.querySelector('.gallery').innerHTML = ''
@@ -272,22 +272,28 @@ function openNewProjectModal(){
     returnArrow.addEventListener('click', () =>{
         modalBox2.style.display = "none"
         modalBox.style.display = ""
+        resetFormFields()
     })
 }
 // Afficher une miniature de l'image sélectionnée pour un nouveau projet OK
 function updateImageFieldDisplay() {
     while(preview.firstChild) {
-      preview.removeChild(preview.firstChild);
+      preview.removeChild(preview.firstChild)      
     }
     let curFiles = imageField.files;
-    if(curFiles.length === 0) {
-        let para = document.createElement('p');
-        para.textContent = 'No files currently selected for upload';
-        preview.appendChild(para);
+    if(curFiles.length === 0) {        
+        preview.innerHTML = `
+            <label for="photo-add-field">
+                <i class="fa-regular fa-image frame-picture"></i>
+            </label>
+            <label for="photo-add-field" class="photo-input-button">+ Ajouter photo</label>
+            <p>jpg, png : 4Mo max</p>
+            <input id="photo-add-field" class="reset-input" type="file" name="photo-add-field" value="" required accept=".jpg, .png" style="opacity: 0;"/>`
     } else {
-        for (let i = 0; i < curFiles.length; i++) {
-            let image = document.createElement('img');
-            image.src = window.URL.createObjectURL(curFiles[i]);
+        for (let i = 0; i < curFiles.length; i++) {           
+            preview.innerHTML = ''
+            let image = document.createElement('img')
+            image.src = window.URL.createObjectURL(curFiles[i])
             image.style.transform = 'scale(0.2)'
   
             preview.appendChild(image);
@@ -314,12 +320,33 @@ async function validateNewWork(e){
         })
         .then(response => {
             if(response.ok){
+                resetImageField()
                 alert('Le projet a bien été ajouté')
             } else {
                 alert('Il faut ajouter une photo pour pouvoir ajouter le projet')
             }
         })
         .catch(error => console.log('Il y a une erreur', error))
+    }
+}
+// Créer la fonction pour vider les champs du formulaire lorsqu'on quitte la modale
+function resetFormFields() {
+    const resetInputs = document.querySelectorAll('.reset-input');
+    resetInputs.forEach(input => {
+        input.value = ''
+    })
+}
+function resetImageField(){
+    if(preview.firstChild.getAttribute('src') != ""){
+    preview.innerHTML = `
+        <label for="photo-add-field">
+            <i class="fa-regular fa-image frame-picture"></i>
+        </label>
+        <label for="photo-add-field" class="photo-input-button">+ Ajouter photo</label>
+        <input id="photo-add-field" class="reset-input" type="file" name="photo-add-field" value="" required accept=".jpg, .png" style="opacity: 0;"/>
+        <p>jpg, png : 4Mo max</p>`
+    } else {
+        return;
     }
 }
 
@@ -355,6 +382,10 @@ if(loggedUserToken){
 
 // Écouter les clics sur les activateurs/désactivateurs de la modale OK
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
+modalTriggers.forEach(trigger => trigger.addEventListener('click', resetFormFields))
+returnArrow.addEventListener('click', resetFormFields)
+returnArrow.addEventListener('click', resetImageField)
+//modalTriggers.forEach(trigger => trigger.addEventListener('click', resetImageField))
 // Ecouter le click sur le bouton Ajouter une photo OK
 projectAdder.addEventListener('click', openNewProjectModal)
 // Ecouter le click sur le lien Supprimer la galerie
@@ -382,7 +413,7 @@ form.addEventListener('submit', (event) => {
     return false;
     }
 });
-// Ajout d'un gestionnaire d'événements pour les modifications des champs de formulaire
+// Ajout d'un gestionnaire d'événements pour écouter les modifications des champs de formulaire
 form.addEventListener('input', () => {
     // Vérification des champs de formulaire
     if (photoTitle.value && categorySelector.value) {
