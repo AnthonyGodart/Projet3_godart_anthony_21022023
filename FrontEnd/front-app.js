@@ -288,7 +288,7 @@ function updateImageFieldDisplay() {
         for (let i = 0; i < curFiles.length; i++) {
             let image = document.createElement('img')
             image.src = window.URL.createObjectURL(curFiles[i])
-            image.style.transform = 'scale(0.2)'
+            image.style.maxHeight = '163px'
             preview.appendChild(image)
         }
 }
@@ -371,7 +371,10 @@ deleteAllLink.addEventListener('click', deleteAllWorks)
 
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
 const preview = document.getElementById('preview')
-imageField.addEventListener('change', updateImageFieldDisplay)
+imageField.addEventListener('change', (e) => {
+    e.preventDefault()
+    updateImageFieldDisplay()
+})
 
 // Ecouter le clic sur le bouton de validation
 addNewWorkButton.addEventListener('click', validateNewWork)
@@ -443,3 +446,18 @@ function resetForm() {
     // Réinitialisation du formulaire
     form.reset()
 }
+
+// Vérifier la taille du fichier 4Mo Max
+function validateFile() {
+    const fileInput = document.getElementById('photo-add-field');
+    if (fileInput.files[0].size > 4000000) {
+        alert('Le fichier ne doit pas dépasser 4Mo');
+        return false
+    }
+    return true
+}
+form.addEventListener('submit', function(event) {
+    if (!validateFile()) {
+      event.preventDefault()
+    }
+});
