@@ -6,39 +6,39 @@ let workList = []
 let clickedButtonId = 0
 
 // Récupérer les boutons de la filter-bar
-const filterButtons = document.querySelectorAll(".filter")
+let filterButtons = document.querySelectorAll(".filter")
 // Récupérer les liens "projets", "contact" etc...
-const linkers = [...document.querySelectorAll('li')]
+let linkers = [...document.querySelectorAll('li')]
 // Ajouter un écouteur d'événements à chaque "lien"
 linkers.forEach(link => {
     link.addEventListener('click', () => handleLinkClick(link))
 })
 // Pour leur attribuer des ancres plus tard
-const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
+let linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 
 // Récupérer le token de sécurité
-const userCredentialToken = sessionStorage.getItem('token')
+let userCredentialToken = sessionStorage.getItem('token')
 // Récupérer la barre du mode "édition"
-const editBar = document.querySelector('.edit-mode')
+let editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
-const modifierButtons = document.querySelectorAll('.modifier-button')
+let modifierButtons = document.querySelectorAll('.modifier-button')
 // Récupérer les éléments de la modale
-const modalContainer = document.querySelector(".modal-container")
-const modalTriggers = document.querySelectorAll(".modal-trigger")
-const modaleAdminProjects = document.querySelector(".modal")
-const modaleAddingNewProjects = document.querySelector(".modal2")
+let modalContainer = document.querySelector(".modal-container")
+let modalTriggers = document.querySelectorAll(".modal-trigger")
+let modaleAdminProjects = document.querySelector(".modal")
+let modaleAddingNewProjects = document.querySelector(".modal2")
 // Récupérer le bouton pour ajouter un projet
-const addNewProjectButton = document.querySelector('.add-photo')
+let addNewProjectButton = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
-const deleteAllLink = document.querySelector('.delete-link')
+let deleteAllLink = document.querySelector('.delete-link')
 // Récupérer la flèche de retour
-const returnArrow = document.querySelector('.return-arrow')
+let returnArrow = document.querySelector('.return-arrow')
 // Récupérer le bouton pour ajouter un nouveau projet
-const validateNewProjectAddButton = document.querySelector('#add-work-button')
+let validateNewProjectAddButton = document.querySelector('#add-work-button')
 // Récupérer les éléments du formulaire d'ajout d'une nouvelle photo
-const imageInputField = document.getElementById('photo-add-field')
-const titleInputField = document.getElementById('photo-title')
-const categoryInputField = document.getElementById('category-selector')
+let imageInputField = document.getElementById('add-photo-field')
+let titleInputField = document.getElementById('photo-title')
+let categoryInputField = document.getElementById('category-selector')
 
 
 // CREATIONS DES FONCTIONS --------------------------------------------------------------------//
@@ -48,28 +48,28 @@ async function renderWorkList(){
     workList = await fetch("http://localhost:5678/api/works")
         .then(workList => workList.json())
 
-    const gallery = document.querySelector(".gallery")
+    let gallery = document.querySelector(".gallery")
     gallery.innerHTML = ''
 
     for ( let i = 0; i < workList.length; i ++){
-        const workElement = document.createElement("figure")
-        const imageElement = document.createElement("img")
+        let workElement = document.createElement("figure")
+        let imageElement = document.createElement("img")
         imageElement.src = workList[i].imageUrl
         workElement.appendChild(imageElement)
-        const titleElement = document.createElement("figcaption")
+        let titleElement = document.createElement("figcaption")
         titleElement.innerText = workList[i].title
         workElement.appendChild(titleElement)
         workElement.classList.add("sheet")
-        const workSheetId = workList[i].categoryId
+        let workSheetId = workList[i].categoryId
         workElement.dataset.id = workSheetId
         gallery.appendChild(workElement)
     }
 
-    const galleryModal = document.querySelector(".gallery-modal")
+    let galleryModal = document.querySelector(".gallery-modal")
     galleryModal.innerHTML = ''
     for ( let j = 0; j < workList.length; j ++){
-        const workElement = document.createElement("figure")
-            const trashCan = document.createElement('i')
+        let workElement = document.createElement("figure")
+            let trashCan = document.createElement('i')
                     trashCan.classList = "fa-sharp fa-solid fa-trash-can delete-button"
                     trashCan.style.fontSize = "9em"
                     trashCan.style.position = "fixed"
@@ -80,7 +80,7 @@ async function renderWorkList(){
                     trashCan.style.cursor = "pointer"
                     trashCan.setAttribute('data-id', workList[j].id)
             workElement.appendChild(trashCan)
-            const dragCross = document.createElement('i')
+            let dragCross = document.createElement('i')
             workElement.addEventListener('mouseover', () => {                
                     dragCross.classList = "fa-solid fa-arrows-up-down-left-right"
                     dragCross.style.fontSize = "9em"
@@ -95,17 +95,17 @@ async function renderWorkList(){
             workElement.addEventListener('mouseout', () => {
                 dragCross.style.display = "none"
             })
-            const imageElement = document.createElement("img")
+            let imageElement = document.createElement("img")
                 imageElement.src = workList[j].imageUrl
             workElement.appendChild(imageElement)
-            const titleElement = document.createElement("figcaption")
+            let titleElement = document.createElement("figcaption")
                 titleElement.innerText = "éditer"
                 titleElement.dataset.id = workList[j].id
                 titleElement.style.fontSize = "9em"
                 titleElement.style.cursor = "pointer"
             workElement.appendChild(titleElement)
             workElement.classList.add("sheet")
-            const workSheetId = workList[j].id
+            let workSheetId = workList[j].id
                 workElement.dataset.id = workSheetId
         workElement.style.transform = 'scale(0.12)'
         galleryModal.appendChild(workElement)
@@ -113,7 +113,7 @@ async function renderWorkList(){
         for ( let deleteButton of deleteButtons){
             deleteButton.addEventListener('click', () => {
                 let id = deleteButton.getAttribute('data-id')
-                const bearer = sessionStorage.getItem('token')
+                let bearer = sessionStorage.getItem('token')
                 deleteSelectedWork(id, bearer)
             })
         }
@@ -123,19 +123,19 @@ async function renderWorkList(){
 }
 // Filtrer les projets et modifier l'affichage des boutons de filtre: OK
 async function filterSheet() {
-    const gallery = document.querySelector(".gallery")
+    let gallery = document.querySelector(".gallery")
     gallery.innerHTML = ''
-    const filteredWorkList = workList.filter(workSheet => workSheet.categoryId == clickedButtonId)
+    let filteredWorkList = workList.filter(workSheet => workSheet.categoryId == clickedButtonId)
     for (let i = 0; i < filteredWorkList.length; i++) {
-        const workElement = document.createElement("figure")
-        const imageElement = document.createElement("img")
+        let workElement = document.createElement("figure")
+        let imageElement = document.createElement("img")
         imageElement.src = filteredWorkList[i].imageUrl
         workElement.appendChild(imageElement)
-        const titleElement = document.createElement("figcaption")
+        let titleElement = document.createElement("figcaption")
         titleElement.innerText = filteredWorkList[i].title
         workElement.appendChild(titleElement)
         workElement.classList.add("sheet")
-        const workSheetId = filteredWorkList[i].categoryId
+        let workSheetId = filteredWorkList[i].categoryId
         workElement.dataset.id = workSheetId
         gallery.appendChild(workElement)
     }
@@ -148,7 +148,7 @@ function changeFilterButtonStyle(button){
         button.classList.add("active")
     }
     clickedButtonId = button.getAttribute('data-key')
-    for ( const currentButton of filterButtons){
+    for ( let currentButton of filterButtons){
         if(currentButton.getAttribute('data-key') != clickedButtonId){
             currentButton.classList.remove("active")
         }
@@ -175,12 +175,12 @@ function onButtonFilterClick(){
 function handleLinkClick(link){
     if (link.innerText == "login") {
         // Cacher toutes les sections sauf la page de connexion
-        const loginPage = document.getElementById("login-page")
-        const sections = document.querySelectorAll('section:not(#login-page)')
+        let loginPage = document.getElementById("login-page")
+        let sections = document.querySelectorAll('section:not(#login-page)')
         sections.forEach(section => section.style.display = "none")
         loginPage.style.display = ""
         // Ajouter un événement de soumission du formulaire de connexion
-        const loginForm = document.getElementById('login-form')
+        let loginForm = document.getElementById('login-form')
         loginForm.addEventListener("submit", logUser)
     } else if (link.innerText == 'logout') {
         // Réinitialiser le lien de connexion et supprimer le token de session
@@ -203,11 +203,11 @@ function handleLinkClick(link){
 // Gérer la fonction de connexion de l'utilisateur OK
 async function logUser(event){
     event.preventDefault();
-    const userLogin = {
+    let userLogin = {
         'email': document.getElementById('emailUser').value,
         'password': document.getElementById('passwordUser').value
     }
-    const authorizeLog = 
+    let authorizeLog = 
         await fetch("http://localhost:5678/api/users/login",
         {
             method: 'POST',
@@ -217,7 +217,7 @@ async function logUser(event){
             },
             body: JSON.stringify(userLogin)
         })
-    const authorizedLog = await authorizeLog.json()
+    let authorizedLog = await authorizeLog.json()
         if (authorizedLog != null && 
             authorizedLog.userId !=0 && 
             authorizedLog.token != null){
@@ -241,7 +241,7 @@ async function toggleModal(){
 }
 // Créer la fonction de suppression d'un projet par Id OK
 async function deleteSelectedWork(id, bearer){
-    const deleteConfirmation = confirm("Êtes-vous sûre de vouloir supprimer ce projet ?")
+    let deleteConfirmation = confirm("Êtes-vous sûre de vouloir supprimer ce projet ?")
     if (deleteConfirmation){
         await fetch(`http://localhost:5678/api/works/${id}`, {
         method: 'DELETE',
@@ -297,12 +297,12 @@ function updateimageInputFieldDisplay() {
 }
 // Créer la fonction qui ajoute un nouveau projet OK
 async function validateAddingNewProject(){
-    const newProject = new FormData()
-    newProject.append("image", document.getElementById('photo-add-field').files[0])
+    let newProject = new FormData()
+    newProject.append("image", document.getElementById('add-photo-field').files[0])
     newProject.append("title", document.getElementById('photo-title').value)
     newProject.append("category", document.getElementById('category-selector').value)
 
-    const addConfirmation = confirm('Voulez-vous valider ce projet ?')
+    let addConfirmation = confirm('Voulez-vous valider ce projet ?')
     if(addConfirmation){
         await fetch('http://localhost:5678/api/works',{
             method: 'POST',
@@ -336,7 +336,7 @@ for (let i = 0; i< linkers.length; i ++){
 }
 // Modifier login=>logout et afficher le bouton "modifier" OK
 for (let link of linkers){
-    const logButton = link.getAttribute('data-key')
+    let logButton = link.getAttribute('data-key')
 
     if (logButton == 'login' && userCredentialToken !=null){
         link.setAttribute('data-key', 'logout')
@@ -347,7 +347,7 @@ for (let link of linkers){
     }
 }
 // Gérer l'affichage de la barre de filtres OK
-const filterBar = document.querySelector('#filter-bar')
+let filterBar = document.querySelector('#filter-bar')
 if(userCredentialToken){
     filterBar.style.display = "none"
 }
@@ -360,7 +360,7 @@ addNewProjectButton.addEventListener('click', openNewProjectModal)
 deleteAllLink.addEventListener('click', deleteAllWorks)
 
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
-const preview = document.getElementById('preview')
+let preview = document.getElementById('preview')
 imageInputField.addEventListener('change', (e) => {
     e.preventDefault()
     updateimageInputFieldDisplay()
@@ -368,10 +368,10 @@ imageInputField.addEventListener('change', (e) => {
 
 // Vérifier que les champs soient bien remplis pour activer le bouton de validation
 // Récupération des éléments du formulaire
-const form = document.querySelector('#add-photo-form');
-const photoTitle = form.querySelector('#photo-title');
-const categorySelector = form.querySelector('#category-selector');
-const addButton = form.querySelector('#add-work-button');
+let form = document.querySelector('#add-photo-form');
+let photoTitle = form.querySelector('#photo-title');
+let categorySelector = form.querySelector('#category-selector');
+let addButton = form.querySelector('#add-work-button');
 // Ajout d'un gestionnaire d'événements pour écouter la soumission du formulaire
 form.addEventListener('submit', (event) => {
     // Empêcher la soumission du formulaire si le bouton est désactivé
@@ -394,8 +394,8 @@ form.addEventListener('input', () => {
 
 // Réinitialiser le formulaire
 // Récupération des éléments HTML
-const modal = document.querySelector('.modal2');
-const closeModalButton = document.querySelector('.close-modal');
+let modal = document.querySelector('.modal2');
+let closeModalButton = document.querySelector('.close-modal');
 
 // Ajout des événements click pour le bouton de fermeture du modal et la flèche de retour
 closeModalButton.addEventListener('click', resetForm);
@@ -409,16 +409,16 @@ function resetForm() {
     preview.innerHTML= ''
     let icon = document.createElement('label')
         icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`
-        icon.setAttribute('for', 'photo-add-field')
+        icon.setAttribute('for', 'add-photo-field')
     let imageInputButton = document.createElement('label')
         imageInputButton.innerText = "+ Ajouter photo"
         imageInputButton.classList = "photo-input-button"
-        imageInputButton.setAttribute('for', 'photo-add-field')
+        imageInputButton.setAttribute('for', 'add-photo-field')
     let input = document.createElement('input')
-        input.setAttribute('id', "photo-add-field")
+        input.setAttribute('id', "add-photo-field")
         input.classList ="reset-input" 
         input.setAttribute('type', "file")
-        input.setAttribute('name', "photo-add-field")
+        input.setAttribute('name', "add-photo-field")
         input.setAttribute('value', "")
         input.setAttribute('required', 'true')
         input.setAttribute('accept', ".jpg, .png")
@@ -435,7 +435,7 @@ function resetForm() {
 
 // Vérifier la taille du fichier 4Mo Max
 function validateFile() {
-    const fileInput = document.getElementById('photo-add-field');
+    let fileInput = document.getElementById('add-photo-field');
     if (fileInput.files[0].size > 4000000) {
         alert('Le fichier ne doit pas dépasser 4Mo');
         return false
