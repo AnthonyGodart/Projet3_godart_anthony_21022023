@@ -28,13 +28,13 @@ let modalTriggers = document.querySelectorAll(".modal-trigger")
 let modaleAdminProjects = document.querySelector(".modal")
 let modaleAddingNewProjects = document.querySelector(".modal2")
 // Récupérer le bouton pour ajouter un projet
-let addNewProjectButton = document.querySelector('.add-photo')
+let openModaleAddingNewProjectsButton = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
 let deleteAllLink = document.querySelector('.delete-link')
 // Récupérer la flèche de retour
 let returnArrow = document.querySelector('.return-arrow')
 // Récupérer le bouton pour ajouter un nouveau projet
-let validateNewProjectAddButton = document.querySelector('#add-work-button')
+let validateNewProjectAddButton = document.getElementById('add-project-button')
 // Récupérer les éléments du formulaire d'ajout d'une nouvelle photo
 let imageInputField = document.getElementById('add-photo-field')
 let titleInputField = document.getElementById('photo-title')
@@ -170,7 +170,7 @@ function onButtonFilterClick(){
     }
 }
 
-
+// Gestion de la connexion de l'utilisateur
 // Afficher ma page de connexion en dynamique OK
 function handleLinkClick(link){
     if (link.innerText == "login") {
@@ -200,7 +200,7 @@ function handleLinkClick(link){
         })
     }
 }
-// Gérer la fonction de connexion de l'utilisateur OK
+// Connexion de l'utilisateur OK
 async function logUser(event){
     event.preventDefault();
     let userLogin = {
@@ -315,6 +315,7 @@ async function validateAddingNewProject(){
             if(response.ok){
                 alert('Le projet a bien été ajouté')
                 renderWorkList()
+                resetForm()
             } else {
                 alert('Il faut ajouter une photo pour pouvoir ajouter le projet')
             }
@@ -326,7 +327,6 @@ async function validateAddingNewProject(){
 // APPEL DE FONCTIONS -----------------------------------------------------------------------------//
 // A la première ouverture de la page web ou à son rechargement
 renderWorkList()
-
 
 
 // FEATURES ---------------------------------------------------------------------------------------//
@@ -354,8 +354,8 @@ if(userCredentialToken){
 
 // Écouter les clics sur les activateurs/désactivateurs de la modale OK
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
-// Ecouter le click sur le bouton Ajouter une photo OK
-addNewProjectButton.addEventListener('click', openNewProjectModal)
+// Ecouter le click sur le bouton Ajouter une photo pour afficher le formulaire d'ajout de projet OK
+openModaleAddingNewProjectsButton.addEventListener('click', openNewProjectModal)
 // Ecouter le click sur le lien Supprimer la galerie
 deleteAllLink.addEventListener('click', deleteAllWorks)
 
@@ -367,38 +367,30 @@ imageInputField.addEventListener('change', (e) => {
 })
 
 // Vérifier que les champs soient bien remplis pour activer le bouton de validation
-// Récupération des éléments du formulaire
-let form = document.querySelector('#add-photo-form');
-let photoTitle = form.querySelector('#photo-title');
-let categorySelector = form.querySelector('#category-selector');
-let addButton = form.querySelector('#add-work-button');
+// Récupération du formulaire
+let form = document.querySelector('#add-photo-form')
 // Ajout d'un gestionnaire d'événements pour écouter la soumission du formulaire
 form.addEventListener('submit', (event) => {
     // Empêcher la soumission du formulaire si le bouton est désactivé
-    if (addButton.disabled) {
-    event.preventDefault();
+    if (validateNewProjectAddButton.disabled) {
+    event.preventDefault()
     return false;
     }
 })
-// Ajout d'un gestionnaire d'événements pour écouter les modifications des champs de formulaire
+// Ecouter la complétion des champs de formulaire pour activer le bouton de validation
 form.addEventListener('input', () => {
     // Vérification des champs de formulaire
-    if (photoTitle.value && categorySelector.value) {
-        addButton.classList.remove('inactive')
-        addButton.disabled = false
+    if (titleInputField.value && categoryInputField.value) {
+        validateNewProjectAddButton.classList.remove('inactive')
+        validateNewProjectAddButton.disabled = false
     } else {
-        addButton.classList.add('inactive')
-        addButton.disabled = true
+        validateNewProjectAddButton.classList.add('inactive')
+        validateNewProjectAddButton.disabled = true
     }
 })
 
-// Réinitialiser le formulaire
-// Récupération des éléments HTML
-let modal = document.querySelector('.modal2');
-let closeModalButton = document.querySelector('.close-modal');
-
 // Ajout des événements click pour le bouton de fermeture du modal et la flèche de retour
-closeModalButton.addEventListener('click', resetForm);
+trigger.addEventListener('click', resetForm);
 returnArrow.addEventListener('click', resetForm);
 
 // Fonction pour réinitialiser le formulaire
@@ -442,10 +434,10 @@ function validateFile() {
     }
     return true
 }
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', (e) => {
     if (!validateFile()) {
-      event.preventDefault()
+      e.preventDefault()
     }
-});
+})
 // Ecouter le clic sur le bouton de validation
 validateNewProjectAddButton.addEventListener('click', validateAddingNewProject)
