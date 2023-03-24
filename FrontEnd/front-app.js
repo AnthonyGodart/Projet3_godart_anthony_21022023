@@ -16,29 +16,22 @@ linkers.forEach(link => {
 // Pour leur attribuer des ancres plus tard
 let linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 
-// Récupérer le token de sécurité
 let userCredentialToken = sessionStorage.getItem('token')
-// Récupérer la barre du mode "édition"
 let editBar = document.querySelector('.edit-mode')
-// Récupérer le bouton modifier
 let modifierButtons = document.querySelectorAll('.modifier-button')
 // Récupérer les éléments de la modale
 let modalContainer = document.querySelector(".modal-container")
 let modalTriggers = document.querySelectorAll(".modal-trigger")
 let modaleAdminProjects = document.querySelector(".modal")
 let modaleAddingNewProjects = document.querySelector(".modal2")
-// Récupérer le bouton pour ajouter un projet
 let openModaleAddingNewProjectsButton = document.querySelector('.add-photo')
-// Récupérer le lien pour supprimer toute la galerie
-let deleteAllLink = document.querySelector('.delete-link')
-// Récupérer la flèche de retour
+let deleteAllProjectsLink = document.querySelector('.delete-link')
 let returnArrow = document.querySelector('.return-arrow')
-// Récupérer le bouton pour ajouter un nouveau projet
-let validateNewProjectAddButton = document.getElementById('add-project-button')
-// Récupérer les éléments du formulaire d'ajout d'une nouvelle photo
+// Récupérer les élements du formulaire d'ajout de nouveau projet
 let imageInputField = document.getElementById('add-photo-field')
 let titleInputField = document.getElementById('photo-title')
 let categoryInputField = document.getElementById('category-selector')
+let validateNewProjectAddButton = document.getElementById('add-project-button')
 
 
 // CREATIONS DES FONCTIONS --------------------------------------------------------------------//
@@ -272,6 +265,7 @@ async function deleteSelectedWork(id, bearer){
 function deleteAllWorks(){
     alert('Voulez-vous vraiment supprimer tous les projets ?')
 }
+
 // Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet OK
 function openNewProjectModal(){
     modaleAdminProjects.style.display = "none"
@@ -282,7 +276,7 @@ function openNewProjectModal(){
         resetFormFields()
     })
 }
-// Afficher une miniature de l'image sélectionnée pour un nouveau projet OK
+// Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet OK
 function updateimageInputFieldDisplay() {
     while(preview.firstChild){
         preview.innerHTML = ''
@@ -357,23 +351,20 @@ modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 // Ecouter le click sur le bouton Ajouter une photo pour afficher le formulaire d'ajout de projet OK
 openModaleAddingNewProjectsButton.addEventListener('click', openNewProjectModal)
 // Ecouter le click sur le lien Supprimer la galerie
-deleteAllLink.addEventListener('click', deleteAllWorks)
+deleteAllProjectsLink.addEventListener('click', deleteAllWorks)
 
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
 let preview = document.getElementById('preview')
-imageInputField.addEventListener('change', (e) => {
-    e.preventDefault()
-    updateimageInputFieldDisplay()
-})
+imageInputField.addEventListener('change', updateimageInputFieldDisplay)
 
 // Vérifier que les champs soient bien remplis pour activer le bouton de validation
 // Récupération du formulaire
 let form = document.querySelector('#add-photo-form')
 // Ajout d'un gestionnaire d'événements pour écouter la soumission du formulaire
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', (e) => {
     // Empêcher la soumission du formulaire si le bouton est désactivé
     if (validateNewProjectAddButton.disabled) {
-    event.preventDefault()
+    e.preventDefault()
     return false;
     }
 })
@@ -396,33 +387,33 @@ returnArrow.addEventListener('click', resetForm);
 // Fonction pour réinitialiser le formulaire
 function resetForm() {
     // Réinitialisation du champ d'entrée de l'image
-    imageInputField.value = ''
+    imageInputField.value = '';
     // Réinitialisation de la prévisualisation de l'image
-    preview.innerHTML= ''
-    let icon = document.createElement('label')
-        icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`
-        icon.setAttribute('for', 'add-photo-field')
-    let imageInputButton = document.createElement('label')
-        imageInputButton.innerText = "+ Ajouter photo"
-        imageInputButton.classList = "photo-input-button"
-        imageInputButton.setAttribute('for', 'add-photo-field')
-    let input = document.createElement('input')
-        input.setAttribute('id', "add-photo-field")
-        input.classList ="reset-input" 
-        input.setAttribute('type', "file")
-        input.setAttribute('name', "add-photo-field")
-        input.setAttribute('value', "")
-        input.setAttribute('required', 'true')
-        input.setAttribute('accept', ".jpg, .png")
-        input.setAttribute('style', "opacity: 0;")
-    let para = document.createElement('p')
-        para.innerText = "jpg, png : 4Mo max"
-    preview.appendChild(icon)
-    preview.appendChild(imageInputButton)
-    preview.appendChild(input)
-    preview.appendChild(para)
+    preview.innerHTML= '';
+    let icon = document.createElement('label');
+        icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`;
+        icon.setAttribute('for', 'add-photo-field');
+    let imageInputButton = document.createElement('label');
+        imageInputButton.innerText = "+ Ajouter photo";
+        imageInputButton.classList = "photo-input-button";
+        imageInputButton.setAttribute('for', 'add-photo-field');
+    let input = document.createElement('input');
+        input.setAttribute('id', "add-photo-field");
+        input.classList ="reset-input";
+        input.setAttribute('type', "file");
+        input.setAttribute('name', "add-photo-field");
+        input.setAttribute('value', "");
+        input.setAttribute('required', 'true');
+        input.setAttribute('accept', ".jpg, .png");
+        input.setAttribute('style', "opacity: 0;");
+    let para = document.createElement('p');
+        para.innerText = "jpg, png : 4Mo max";
+    preview.appendChild(icon);
+    preview.appendChild(imageInputButton);
+    preview.appendChild(input);
+    preview.appendChild(para);
     // Réinitialisation du formulaire
-    form.reset()
+    form.reset();
 }
 
 // Vérifier la taille du fichier 4Mo Max
