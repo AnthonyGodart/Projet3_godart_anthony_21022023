@@ -1,8 +1,6 @@
 // DECLARATION DES VARIABLES GLOBALES ------------------------------------------------------//
 // Récupérer les données du Back-end OK
-const workList =
-    await fetch("http://localhost:5678/api/works")
-    .then(workList => workList.json())
+let workList = []
 
 // Initialiser des listeners
 let clickedButtonId = 0
@@ -20,7 +18,7 @@ linkers.forEach(link => {
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 
 // Récupérer le token
-const loggedUserToken = sessionStorage.getItem('token')
+const userCredentialToken = sessionStorage.getItem('token')
 // Récupérer la barre du mode "édition"
 const editBar = document.querySelector('.edit-mode')
 // Récupérer le bouton modifier
@@ -28,25 +26,29 @@ const modifierButtons = document.querySelectorAll('.modifier-button')
 // Récupérer les éléments de la modale
 const modalContainer = document.querySelector(".modal-container")
 const modalTriggers = document.querySelectorAll(".modal-trigger")
-const modalBox = document.querySelector(".modal")
-const modalBox2 = document.querySelector(".modal2")
+const modaleAdminProjects = document.querySelector(".modal")
+const modaleAddingNewProjects = document.querySelector(".modal2")
 // Récupérer le bouton pour ajouter un projet
-const projectAdder = document.querySelector('.add-photo')
+const addNewProjectButton = document.querySelector('.add-photo')
 // Récupérer le lien pour supprimer toute la galerie
 const deleteAllLink = document.querySelector('.delete-link')
 // Récupérer la flèche de retour
 const returnArrow = document.querySelector('.return-arrow')
 // Récupérer le bouton pour ajouter un nouveau projet
-const addNewWorkButton = document.querySelector('#add-work-button')
+const validateNewProjectAddButton = document.querySelector('#add-work-button')
 // Récupérer les éléments du formulaire d'ajout d'une nouvelle photo
-const imageField = document.getElementById('photo-add-field')
-const titleField = document.getElementById('photo-title')
-const categoryField = document.getElementById('category-selector')
+const imageInputField = document.getElementById('photo-add-field')
+const titleInputField = document.getElementById('photo-title')
+const categoryInputField = document.getElementById('category-selector')
 
 
 // CREATIONS DES FONCTIONS --------------------------------------------------------------------//
 // Générer l'affichage dynamique de fiches des travaux avec un data-id intégré: OK
-async function generateWorkSheet(){
+// Dans la page principale et dans la modale
+async function renderWorkList(){
+    workList = await fetch("http://localhost:5678/api/works")
+        .then(workList => workList.json())
+
     const gallery = document.querySelector(".gallery")
     gallery.innerHTML = ''
 
@@ -63,8 +65,62 @@ async function generateWorkSheet(){
         workElement.dataset.id = workSheetId
         gallery.appendChild(workElement)
     }
+
+    const galleryModal = document.querySelector(".gallery-modal")
+    galleryModal.innerHTML = ''
+    for ( let j = 0; j < workList.length; j ++){
+        const workElement = document.createElement("figure")
+            const trashCan = document.createElement('i')
+                    trashCan.classList = "fa-sharp fa-solid fa-trash-can delete-button"
+                    trashCan.style.fontSize = "9em"
+                    trashCan.style.position = "fixed"
+                    trashCan.style.top = "30px"
+                    trashCan.style.right = "20px"
+                    trashCan.style.color = "white"
+                    trashCan.style.background = "black"
+                    trashCan.style.cursor = "pointer"
+                    trashCan.setAttribute('data-id', workList[j].id)
+            workElement.appendChild(trashCan)
+            const dragCross = document.createElement('i')
+            workElement.addEventListener('mouseover', () => {                
+                    dragCross.classList = "fa-solid fa-arrows-up-down-left-right"
+                    dragCross.style.fontSize = "9em"
+                    dragCross.style.position = "fixed"
+                    dragCross.style.top = "30px"
+                    dragCross.style.right = "150px"
+                    dragCross.style.color = "white"
+                    dragCross.style.background = "black"
+                    dragCross.style.display = ""
+                workElement.appendChild(dragCross)
+            })
+            workElement.addEventListener('mouseout', () => {
+                dragCross.style.display = "none"
+            })
+            const imageElement = document.createElement("img")
+                imageElement.src = workList[j].imageUrl
+            workElement.appendChild(imageElement)
+            const titleElement = document.createElement("figcaption")
+                titleElement.innerText = "éditer"
+                titleElement.dataset.id = workList[j].id
+                titleElement.style.fontSize = "9em"
+                titleElement.style.cursor = "pointer"
+            workElement.appendChild(titleElement)
+            workElement.classList.add("sheet")
+            const workSheetId = workList[j].id
+                workElement.dataset.id = workSheetId
+        workElement.style.transform = 'scale(0.12)'
+        galleryModal.appendChild(workElement)
+        let deleteButtons = document.querySelectorAll('.delete-button')
+        for ( let deleteButton of deleteButtons){
+            deleteButton.addEventListener('click', () => {
+                let id = deleteButton.getAttribute('data-id')
+                const bearer = sessionStorage.getItem('token')
+                deleteSelectedWork(id, bearer)
+            })
+        }
+    }
 }
-// Adapter generateWorkSheet() pour qu'il n'affiche que les fiches triées : OK
+// Adapter renderWorkList() pour qu'il n'affiche que les fiches triées : OK
 async function filterSheet() {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
@@ -84,7 +140,7 @@ async function filterSheet() {
         gallery.appendChild(workElement);
     }
 }
-// Je change les couleurs des boutons de la barre de filtres: OK
+// Je change les couleurs des boutons de la barre de filtres en fonction de celui sélectionné: OK
 function changeFilterButtonStyle(button){
     if(button.classList.contains("active")){
         return
@@ -109,7 +165,7 @@ function onButtonFilterClick(){
             if(button.getAttribute('data-key') != 0){
                 filterSheet()
             } else {
-                generateWorkSheet()
+                renderWorkList()
             }
         });
     }
@@ -168,7 +224,7 @@ async function logUser(event){
                 window.location.href = "index.html"
         } else {
             alert('Email ou mot de passe incorrect.')
-            if(loggedUserToken != null){
+            if(userCredentialToken != null){
                 window.sessionStorage.removeItem('token')
             }
         }
@@ -176,65 +232,9 @@ async function logUser(event){
 // Gérer le fonctionnement de la modale OK
 async function toggleModal(){
     modalContainer.classList.toggle("displayed")
-    modalBox2.style.display = "none"
-    modalBox.style.display = ""
-    generateModifiableWorkList()
-    const deleteButtons = document.querySelectorAll('.delete-button')
-    for ( let deleteButton of deleteButtons){
-        deleteButton.addEventListener('click', () => {
-            let id = deleteButton.getAttribute('data-id')
-            const bearer = sessionStorage.getItem('token')
-            deleteSelectedWork(id, bearer)
-        })
-    }
-}
-// Gérer l'affichage des projets dans la modale
-async function generateModifiableWorkList(){
-    const galleryModal = document.querySelector(".gallery-modal")
-    galleryModal.innerHTML = ''
-    for ( let i = 0; i < workList.length; i ++){
-        const workElement = document.createElement("figure")
-            const trashCan = document.createElement('i')
-                    trashCan.classList = "fa-sharp fa-solid fa-trash-can delete-button"
-                    trashCan.style.fontSize = "9em"
-                    trashCan.style.position = "fixed"
-                    trashCan.style.top = "30px"
-                    trashCan.style.right = "20px"
-                    trashCan.style.color = "white"
-                    trashCan.style.background = "black"
-                    trashCan.style.cursor = "pointer"
-                    trashCan.setAttribute('data-id', workList[i].id)
-            workElement.appendChild(trashCan)
-            const dragCross = document.createElement('i')
-            workElement.addEventListener('mouseover', () => {                
-                    dragCross.classList = "fa-solid fa-arrows-up-down-left-right"
-                    dragCross.style.fontSize = "9em"
-                    dragCross.style.position = "fixed"
-                    dragCross.style.top = "30px"
-                    dragCross.style.right = "150px"
-                    dragCross.style.color = "white"
-                    dragCross.style.background = "black"
-                    dragCross.style.display = ""
-                workElement.appendChild(dragCross)
-            })
-            workElement.addEventListener('mouseout', () => {
-                dragCross.style.display = "none"
-            })
-            const imageElement = document.createElement("img")
-                imageElement.src = workList[i].imageUrl
-            workElement.appendChild(imageElement)
-            const titleElement = document.createElement("figcaption")
-                titleElement.innerText = "éditer"
-                titleElement.dataset.id = workList[i].id
-                titleElement.style.fontSize = "9em"
-                titleElement.style.cursor = "pointer"
-            workElement.appendChild(titleElement)
-            workElement.classList.add("sheet")
-            const workSheetId = workList[i].id
-                workElement.dataset.id = workSheetId
-        workElement.style.transform = 'scale(0.12)'
-        galleryModal.appendChild(workElement)
-    }
+    modaleAddingNewProjects.style.display = "none"
+    modaleAdminProjects.style.display = ""
+    renderWorkList()
 }
 // Créer la fonction de suppression d'un projet par Id
 async function deleteSelectedWork(id, bearer){
@@ -250,10 +250,11 @@ async function deleteSelectedWork(id, bearer){
             if (response.ok) {
                 document.querySelector('.gallery-modal').innerHTML = ''
                 document.querySelector('.gallery').innerHTML = ''
-                const workList =
+                workList =
                     await fetch("http://localhost:5678/api/works")
                     .then(workList => workList.json())
-                    .then(generateWorkSheet(), generateModifiableWorkList())
+                    .then(renderWorkList())
+                    .then(renderWorkList())
                 console.log('La ressource a été supprimée avec succès')
             } else {
                 console.log('La suppression de la ressource a échoué')
@@ -271,20 +272,20 @@ function deleteAllWorks(){
 }
 // Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet OK
 function openNewProjectModal(){
-    modalBox.style.display = "none"
-    modalBox2.style.display = ""
+    modaleAdminProjects.style.display = "none"
+    modaleAddingNewProjects.style.display = ""
     returnArrow.addEventListener('click', () =>{
-        modalBox2.style.display = "none"
-        modalBox.style.display = ""
+        modaleAddingNewProjects.style.display = "none"
+        modaleAdminProjects.style.display = ""
         resetFormFields()
     })
 }
 // Afficher une miniature de l'image sélectionnée pour un nouveau projet OK
-function updateImageFieldDisplay() {
+function updateimageInputFieldDisplay() {
     while(preview.firstChild){
         preview.innerHTML = ''
     }
-    let curFiles = imageField.files;
+    let curFiles = imageInputField.files;
         for (let i = 0; i < curFiles.length; i++) {
             let image = document.createElement('img')
             image.src = window.URL.createObjectURL(curFiles[i])
@@ -297,7 +298,7 @@ async function validateNewWork(e){
     e.preventDefault()
 
     const newSheet = new FormData()
-    newSheet.append("image", imageField.files[0])
+    newSheet.append("image", imageInputField.files[0])
     newSheet.append("title", document.getElementById('photo-title').value)
     newSheet.append("category", document.getElementById('category-selector').value)
 
@@ -306,13 +307,13 @@ async function validateNewWork(e){
         await fetch('http://localhost:5678/api/works',{
             method: 'POST',
             headers: {
-                'Authorization': "Bearer " + loggedUserToken,
+                'Authorization': "Bearer " + userCredentialToken,
             },
             body: newSheet,
         })
         .then(response => {
             if(response.ok){
-                resetImageField()
+                resetimageInputField()
                 alert('Le projet a bien été ajouté')
             } else {
                 alert('Il faut ajouter une photo pour pouvoir ajouter le projet')
@@ -331,7 +332,7 @@ function resetFormFields() {
 
 // APPEL DE FONCTIONS -----------------------------------------------------------------------------//
 // A la première ouverture de la page web ou à son rechargement
-generateWorkSheet()
+renderWorkList()
 // Au clic sur le bouton filtre
 onButtonFilterClick()
 
@@ -345,7 +346,7 @@ for (let i = 0; i< linkers.length; i ++){
 for (let link of linkers){
     const logButton = link.getAttribute('data-key')
 
-    if (logButton == 'login' && loggedUserToken !=null){
+    if (logButton == 'login' && userCredentialToken !=null){
         link.setAttribute('data-key', 'logout')
         link.innerText = 'logout'
         modifierButtons.forEach(modifierButton =>
@@ -355,7 +356,7 @@ for (let link of linkers){
 }
 // Gérer l'affichage de la barre de filtres OK
 const filterBar = document.querySelector('#filter-bar')
-if(loggedUserToken){
+if(userCredentialToken){
     filterBar.style.display = "none"
 }
 
@@ -363,21 +364,20 @@ if(loggedUserToken){
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
 modalTriggers.forEach(trigger => trigger.addEventListener('click', resetFormFields))
 returnArrow.addEventListener('click', resetFormFields)
-//modalTriggers.forEach(trigger => trigger.addEventListener('click', resetImageField))
 // Ecouter le click sur le bouton Ajouter une photo OK
-projectAdder.addEventListener('click', openNewProjectModal)
+addNewProjectButton.addEventListener('click', openNewProjectModal)
 // Ecouter le click sur le lien Supprimer la galerie
 deleteAllLink.addEventListener('click', deleteAllWorks)
 
 // Ecouter l'ajout d'une image pour afficher sa miniature OK
 const preview = document.getElementById('preview')
-imageField.addEventListener('change', (e) => {
+imageInputField.addEventListener('change', (e) => {
     e.preventDefault()
-    updateImageFieldDisplay()
+    updateimageInputFieldDisplay()
 })
 
 // Ecouter le clic sur le bouton de validation
-addNewWorkButton.addEventListener('click', validateNewWork)
+validateNewProjectAddButton.addEventListener('click', (e) => {validateNewWork})
 
 
 // Vérifier que les champs soient bien remplis pour activer le bouton de validation
@@ -418,7 +418,7 @@ returnArrow.addEventListener('click', resetForm);
 // Fonction pour réinitialiser le formulaire
 function resetForm() {
     // Réinitialisation du champ d'entrée de l'image
-    imageField.value = ''
+    imageInputField.value = ''
     // Réinitialisation de la prévisualisation de l'image
     preview.innerHTML= ''
     let icon = document.createElement('label')
