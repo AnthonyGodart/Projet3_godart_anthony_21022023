@@ -4,7 +4,6 @@ let workList = []
 
 // Initialiser des listeners
 let clickedButtonId = 0
-let clickedLink = 0
 
 // Récupérer les boutons de la filter-bar
 const filterButtons = document.querySelectorAll(".filter")
@@ -17,7 +16,7 @@ linkers.forEach(link => {
 // Pour leur attribuer des ancres plus tard
 const linkerHref = ["#portfolio", "#contact", "", "#", "#"]
 
-// Récupérer le token
+// Récupérer le token de sécurité
 const userCredentialToken = sessionStorage.getItem('token')
 // Récupérer la barre du mode "édition"
 const editBar = document.querySelector('.edit-mode')
@@ -119,25 +118,26 @@ async function renderWorkList(){
             })
         }
     }
+    // Au clic sur le bouton filtre
+    onButtonFilterClick()
 }
-// Adapter renderWorkList() pour qu'il n'affiche que les fiches triées : OK
+// Filtrer les projets et modifier l'affichage des boutons de filtre: OK
 async function filterSheet() {
-    const gallery = document.querySelector(".gallery");
-    gallery.innerHTML = '';
-    const filteredWorkList = workList.filter(workSheet => workSheet.categoryId == clickedButtonId);
-
+    const gallery = document.querySelector(".gallery")
+    gallery.innerHTML = ''
+    const filteredWorkList = workList.filter(workSheet => workSheet.categoryId == clickedButtonId)
     for (let i = 0; i < filteredWorkList.length; i++) {
-        const workElement = document.createElement("figure");
-        const imageElement = document.createElement("img");
-        imageElement.src = filteredWorkList[i].imageUrl;
-        workElement.appendChild(imageElement);
-        const titleElement = document.createElement("figcaption");
-        titleElement.innerText = filteredWorkList[i].title;
-        workElement.appendChild(titleElement);
-        workElement.classList.add("sheet");
-        const workSheetId = filteredWorkList[i].categoryId;
-        workElement.dataset.id = workSheetId;
-        gallery.appendChild(workElement);
+        const workElement = document.createElement("figure")
+        const imageElement = document.createElement("img")
+        imageElement.src = filteredWorkList[i].imageUrl
+        workElement.appendChild(imageElement)
+        const titleElement = document.createElement("figcaption")
+        titleElement.innerText = filteredWorkList[i].title
+        workElement.appendChild(titleElement)
+        workElement.classList.add("sheet")
+        const workSheetId = filteredWorkList[i].categoryId
+        workElement.dataset.id = workSheetId
+        gallery.appendChild(workElement)
     }
 }
 // Je change les couleurs des boutons de la barre de filtres en fonction de celui sélectionné: OK
@@ -160,8 +160,7 @@ function onButtonFilterClick(){
         button.addEventListener('click', () => {
             //Ici la fonction pour changer la couleur du bouton lors du click : OK
             changeFilterButtonStyle(button)
-            //Ici la fonction pour filtrer les <figure> par catégorie (data-id)
-            //en fonction du bouton cliqué (data-key)
+            //Ici la fonction pour filtrer les projets par catégorie (data-id) en fonction du bouton cliqué (data-key)
             if(button.getAttribute('data-key') != 0){
                 filterSheet()
             } else {
@@ -170,7 +169,9 @@ function onButtonFilterClick(){
         });
     }
 }
-// Générer ma page de connexion en dynamique OK
+
+
+// Afficher ma page de connexion en dynamique OK
 function handleLinkClick(link){
     if (link.innerText == "login") {
         // Cacher toutes les sections sauf la page de connexion
@@ -229,14 +230,16 @@ async function logUser(event){
             }
         }
 }
-// Gérer le fonctionnement de la modale OK
+
+
+// Gérer l'affichage de la modale OK
 async function toggleModal(){
     modalContainer.classList.toggle("displayed")
     modaleAddingNewProjects.style.display = "none"
     modaleAdminProjects.style.display = ""
     renderWorkList()
 }
-// Créer la fonction de suppression d'un projet par Id
+// Créer la fonction de suppression d'un projet par Id OK
 async function deleteSelectedWork(id, bearer){
     const deleteConfirmation = confirm("Êtes-vous sûre de vouloir supprimer ce projet ?")
     if (deleteConfirmation){
@@ -253,7 +256,6 @@ async function deleteSelectedWork(id, bearer){
                 workList =
                     await fetch("http://localhost:5678/api/works")
                     .then(workList => workList.json())
-                    .then(renderWorkList())
                     .then(renderWorkList())
                 console.log('La ressource a été supprimée avec succès')
             } else {
@@ -294,13 +296,11 @@ function updateimageInputFieldDisplay() {
         }
 }
 // Créer la fonction qui ajoute un nouveau projet OK
-async function validateNewWork(e){
-    e.preventDefault()
-
-    const newSheet = new FormData()
-    newSheet.append("image", imageInputField.files[0])
-    newSheet.append("title", document.getElementById('photo-title').value)
-    newSheet.append("category", document.getElementById('category-selector').value)
+async function validateAddingNewProject(){
+    const newProject = new FormData()
+    newProject.append("image", document.getElementById('photo-add-field').files[0])
+    newProject.append("title", document.getElementById('photo-title').value)
+    newProject.append("category", document.getElementById('category-selector').value)
 
     const addConfirmation = confirm('Voulez-vous valider ce projet ?')
     if(addConfirmation){
@@ -309,12 +309,12 @@ async function validateNewWork(e){
             headers: {
                 'Authorization': "Bearer " + userCredentialToken,
             },
-            body: newSheet,
+            body: newProject,
         })
         .then(response => {
             if(response.ok){
-                resetimageInputField()
                 alert('Le projet a bien été ajouté')
+                renderWorkList()
             } else {
                 alert('Il faut ajouter une photo pour pouvoir ajouter le projet')
             }
@@ -322,19 +322,11 @@ async function validateNewWork(e){
         .catch(error => console.log('Il y a une erreur', error))
     }
 }
-// Créer la fonction pour vider les champs du formulaire lorsqu'on quitte la modale
-function resetFormFields() {
-    const resetInputs = document.querySelectorAll('.reset-input');
-    resetInputs.forEach(input => {
-        input.value = ''
-    })
-}
 
 // APPEL DE FONCTIONS -----------------------------------------------------------------------------//
 // A la première ouverture de la page web ou à son rechargement
 renderWorkList()
-// Au clic sur le bouton filtre
-onButtonFilterClick()
+
 
 
 // FEATURES ---------------------------------------------------------------------------------------//
@@ -362,8 +354,6 @@ if(userCredentialToken){
 
 // Écouter les clics sur les activateurs/désactivateurs de la modale OK
 modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal))
-modalTriggers.forEach(trigger => trigger.addEventListener('click', resetFormFields))
-returnArrow.addEventListener('click', resetFormFields)
 // Ecouter le click sur le bouton Ajouter une photo OK
 addNewProjectButton.addEventListener('click', openNewProjectModal)
 // Ecouter le click sur le lien Supprimer la galerie
@@ -375,10 +365,6 @@ imageInputField.addEventListener('change', (e) => {
     e.preventDefault()
     updateimageInputFieldDisplay()
 })
-
-// Ecouter le clic sur le bouton de validation
-validateNewProjectAddButton.addEventListener('click', (e) => {validateNewWork})
-
 
 // Vérifier que les champs soient bien remplis pour activer le bouton de validation
 // Récupération des éléments du formulaire
@@ -398,11 +384,11 @@ form.addEventListener('submit', (event) => {
 form.addEventListener('input', () => {
     // Vérification des champs de formulaire
     if (photoTitle.value && categorySelector.value) {
-        addButton.classList.remove('inactive');
-        addButton.disabled = false;
+        addButton.classList.remove('inactive')
+        addButton.disabled = false
     } else {
-        addButton.classList.add('inactive');
-        addButton.disabled = true;
+        addButton.classList.add('inactive')
+        addButton.disabled = true
     }
 })
 
@@ -461,3 +447,5 @@ form.addEventListener('submit', function(event) {
       event.preventDefault()
     }
 });
+// Ecouter le clic sur le bouton de validation
+validateNewProjectAddButton.addEventListener('click', validateAddingNewProject)
