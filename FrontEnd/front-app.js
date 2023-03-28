@@ -351,7 +351,6 @@ async function validateAddingNewProject(){
         .then(response => {
             if(response.ok){
                 alert('Le projet a bien été ajouté');
-                window.location.href = 'index.html'
             } else {
                 alert('Il faut ajouter une photo pour pouvoir ajouter le projet');
             };
