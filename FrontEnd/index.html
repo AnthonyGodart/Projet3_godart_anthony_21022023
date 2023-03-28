@@ -81,7 +81,12 @@
 				<h2 class="title-modal title-modal2">Ajout photo</h2>
 				<form id="add-photo-form" class="add-photo-form" method="post" enctype="multipart/form-data">
 					<div id="preview" class="preview photo-input-field">
-						<!-- Affichage du formulaire en dynamique -->				
+						<label for="add-photo-field">
+							<i class="fa-regular fa-image frame-picture"></i>
+						</label>
+						<label for="add-photo-field" class="photo-input-button">+ Ajouter photo</label>
+						<input id="add-photo-field" class="reset-input" type="file" name="add-photo-field" required accept=".jpg, .png" style="opacity: 0;"/>
+						<p>jpg, png : 4Mo max</p>				
 					</div>
 					<div class="title-input-field">
 						<label for="title">Titre</label>

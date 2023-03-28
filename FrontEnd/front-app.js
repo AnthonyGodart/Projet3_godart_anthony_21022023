@@ -58,25 +58,17 @@ function setInitialPreviewField(){
     preview.appendChild(input);
     preview.appendChild(para);
 }
-setInitialPreviewField();
+//setInitialPreviewField();
 // Écouter la sélection d'une image pour afficher sa miniature OK
 let imageInputField = document.querySelector('#add-photo-field');
 imageInputField.addEventListener('change', updateimageInputFieldDisplay);
 let titleInputField = document.querySelector('#photo-title');
 let categoryInputField = document.querySelector('#category-selector');
-// Ecouter le clic sur le bouton de validation OK
 let validateNewProjectAddButton = document.querySelector('#add-project-button');
-// Créer le formData pour ajouter un nouveau projet
-let newProject = new FormData();
-newProject.append("image", document.getElementById('add-photo-field').files[0]);
-newProject.append("title", document.getElementById('photo-title').value);
-newProject.append("category", document.getElementById('category-selector').value);
-validateNewProjectAddButton.addEventListener('click', validateAddingNewProject);
-
 
 // CREATIONS DES FONCTIONS --------------------------------------------------------------------//
-// Afficher en dynamique les fiches des travaux avec un data-id intégré: OK
-// Dans la page principale et dans la modale
+// Fonction principale : Afficher en dynamique les fiches des travaux avec un data-id intégré: OK
+// Dans la page principale et dans la modale OK
 async function renderWorkList(){
     workList = await fetch("http://localhost:5678/api/works")
         .then(workList => workList.json());
@@ -202,8 +194,11 @@ function onButtonFilterClick(){
         });
     };
 }
+// APPEL DE LA FONCTION :
+// A la première ouverture de la page web ou à son rechargement
+renderWorkList();
 
-// Gestion de la connexion de l'utilisateur
+// Gestion de la connexion de l'utilisateur OK
 // Afficher ma page de connexion en dynamique OK
 function handleLinkClick(link){
     if (link.innerText == "login") {
@@ -264,7 +259,7 @@ async function logUser(event){
         };
 }
 
-// Afficher de la modale OK
+// Afficher la modale OK
 async function toggleModal(){
     modalContainer.classList.toggle("displayed");
     modaleAddingNewProjects.style.display = "none";
@@ -339,12 +334,25 @@ function updateimageInputFieldDisplay() {
 }
 // Créer la fonction qui ajoute un nouveau projet
 async function validateAddingNewProject(){
+    await Promise.all([imageInputField, titleInputField, categoryInputField].map(field => field.updateComplete));
+    // Créer le formData pour ajouter un nouveau projet
+    const newProject = new FormData();
+    newProject.append('image', imageInputField.files[0], imageInputField.files[0].name);
+    newProject.append('title', titleInputField.value);
+    newProject.append('category', categoryInputField.value);
+    console.log('image : ', imageInputField.files[0], imageInputField.files[0].name);
+    console.log('title : ', titleInputField.value, titleInputField.name);
+    console.log('category : ', categoryInputField.value, categoryInputField.name);
+    console.log('le form data', newProject);
+    debugger
     let addConfirmation = confirm('Voulez-vous valider ce projet ?');
+    console.log('voici la valeur de addConfirmation', addConfirmation);
     if(addConfirmation){
         await fetch('http://localhost:5678/api/works',{
             method: 'POST',
             headers: {
                 'Authorization': "Bearer " + userCredentialToken,
+                'Content-Type': 'multipart/form-data',
             },
             body: newProject,
         })
@@ -358,11 +366,7 @@ async function validateAddingNewProject(){
         .catch(error => console.log('Il y a une erreur', error));
     };
 }
-
-// APPEL DE FONCTION -----------------------------------------------------------------------------//
-// A la première ouverture de la page web ou à son rechargement
-renderWorkList();
-
+validateNewProjectAddButton.addEventListener('click', validateAddingNewProject);
 
 // FEATURES ---------------------------------------------------------------------------------------//
 // Modifier login=>logout et afficher le bouton "modifier" OK
@@ -423,14 +427,14 @@ addNewProjectForm.addEventListener('submit', (e) => {
 //modalTriggers.forEach(trigger => trigger.addEventListener('click', resetForm));
 //returnArrow.addEventListener('click', resetForm);
 // Réinitialiser le formulaire
-function resetForm() {
-    if (imageInputField.value != ''){
-    // Réinitialisation du champ d'entrée de l'image
-    imageInputField.value = '';
-    // Réinitialisation de la prévisualisation de l'image
-    preview.removeChild(preview.firstChild);
-    setInitialPreviewField();
-    }
-    // Réinitialisation du formulaire
-    addNewProjectForm.reset();
-}
+//function resetForm() {
+//    if (imageInputField.value != ''){
+//    // Réinitialisation du champ d'entrée de l'image
+//    imageInputField.value = '';
+//    // Réinitialisation de la prévisualisation de l'image
+//    preview.removeChild(preview.firstChild);
+//    setInitialPreviewField();
+//    }
+//    // Réinitialisation du formulaire
+//    addNewProjectForm.reset();
+//}
