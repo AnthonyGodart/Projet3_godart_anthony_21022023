@@ -340,13 +340,14 @@ async function validateAddingNewProject(){
     newProject.append('image', imageInputField.files[0], imageInputField.files[0].name);
     newProject.append('title', titleInputField.value);
     newProject.append('category', categoryInputField.value);
+    // Vérifier les valeurs qu'on a passées au formData
     console.log('image : ', imageInputField.files[0], imageInputField.files[0].name);
     console.log('title : ', titleInputField.value, titleInputField.name);
     console.log('category : ', categoryInputField.value, categoryInputField.name);
+    // Vérifier le contenu du formData
     console.log('le form data', newProject);
     debugger
     let addConfirmation = confirm('Voulez-vous valider ce projet ?');
-    console.log('voici la valeur de addConfirmation', addConfirmation);
     if(addConfirmation){
         await fetch('http://localhost:5678/api/works',{
             method: 'POST',
@@ -407,7 +408,7 @@ addNewProjectForm.addEventListener('input', () => {
         validateNewProjectAddButton.disabled = true;
     };
 });
-// Vérifier la taille du fichier 4Mo Max
+/** // Vérifier la taille du fichier 4Mo Max
 function validateFile() {
     let fileInput = document.getElementById('add-photo-field');
     if (fileInput.files[0].size > 4000000) {
@@ -421,20 +422,4 @@ addNewProjectForm.addEventListener('submit', (e) => {
       e.preventDefault();
     };
 })
-
-// Écouter les événements lorsqu'on sort de la modale -------------------------------------//
-// Ajout des événements click pour le bouton de fermeture du modal et la flèche de retour
-//modalTriggers.forEach(trigger => trigger.addEventListener('click', resetForm));
-//returnArrow.addEventListener('click', resetForm);
-// Réinitialiser le formulaire
-//function resetForm() {
-//    if (imageInputField.value != ''){
-//    // Réinitialisation du champ d'entrée de l'image
-//    imageInputField.value = '';
-//    // Réinitialisation de la prévisualisation de l'image
-//    preview.removeChild(preview.firstChild);
-//    setInitialPreviewField();
-//    }
-//    // Réinitialisation du formulaire
-//    addNewProjectForm.reset();
-//}
+*/
