@@ -319,7 +319,7 @@ function openNewProjectModal(){
         modaleAdminProjects.style.display = "";
     });
 }
-// Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet OK
+// Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet : half OK
 function updateimageInputFieldDisplay() {
     while(preview.firstChild){
         preview.removeChild(preview.firstChild);
