@@ -337,7 +337,7 @@ function updateimageInputFieldDisplay() {
         };
     }
 }
-// Créer la fonction qui ajoute un nouveau projet ( fait le job si F5 mais renvoie erreur 405 )
+// Créer la fonction qui ajoute un nouveau projet
 async function validateAddingNewProject(){
     let addConfirmation = confirm('Voulez-vous valider ce projet ?');
     if(addConfirmation){
