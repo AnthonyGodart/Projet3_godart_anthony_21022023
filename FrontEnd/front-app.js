@@ -26,45 +26,6 @@ for (let i = 0; i< linkers.length; i ++){
 
 let editBar = document.querySelector('.edit-mode')
 let modifierButtons = document.querySelectorAll('.modifier-button')
-// Récupérer les éléments de la modale
-let modalContainer = document.querySelector(".modal-container")
-let modalTriggers = document.querySelectorAll(".modal-trigger")
-let modaleAdminProjects = document.querySelector(".modal")
-let modaleAddingNewProjects = document.querySelector(".modal2")
-let returnArrow = document.querySelector('.return-arrow')
-// Récupérer les élements du formulaire d'ajout de nouveau projet
-let preview = document.querySelector('#preview');
-function setInitialPreviewField(){
-    let icon = document.createElement('label');
-        icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`;
-        icon.setAttribute('for', 'add-photo-field');
-    let imageInputButton = document.createElement('label');
-        imageInputButton.innerText = "+ Ajouter photo";
-        imageInputButton.classList = "photo-input-button";
-        imageInputButton.setAttribute('for', 'add-photo-field');
-    let input = document.createElement('input');
-        input.setAttribute('id', "add-photo-field");
-        input.classList ="reset-input";
-        input.setAttribute('type', "file");
-        input.setAttribute('name', "add-photo-field");
-        input.setAttribute('value', "");
-        input.setAttribute('required', 'true');
-        input.setAttribute('accept', ".jpg, .png");
-        input.setAttribute('style', "opacity: 0;");
-    let para = document.createElement('p');
-        para.innerText = "jpg, png : 4Mo max";
-    preview.appendChild(icon);
-    preview.appendChild(imageInputButton);
-    preview.appendChild(input);
-    preview.appendChild(para);
-}
-//setInitialPreviewField();
-// Écouter la sélection d'une image pour afficher sa miniature OK
-let imageInputField = document.querySelector('#add-photo-field');
-imageInputField.addEventListener('change', updateimageInputFieldDisplay);
-let titleInputField = document.querySelector('#photo-title');
-let categoryInputField = document.querySelector('#category-selector');
-let validateNewProjectAddButton = document.querySelector('#add-project-button');
 
 // CREATIONS DES FONCTIONS --------------------------------------------------------------------//
 // Fonction principale : Afficher en dynamique les fiches des travaux avec un data-id intégré: OK
@@ -198,7 +159,7 @@ function onButtonFilterClick(){
 // A la première ouverture de la page web ou à son rechargement
 renderWorkList();
 
-// Gestion de la connexion de l'utilisateur OK
+// Gestion de la connexion de l'utilisateur OK -----------------------------------//
 // Afficher ma page de connexion en dynamique OK
 function handleLinkClick(link){
     if (link.innerText == "login") {
@@ -259,19 +220,21 @@ async function logUser(event){
         };
 }
 
-// Afficher la modale OK
+// Afficher la modale OK ---------------------------------------------------------//
+// Récupérer les éléments de la modale
+let modalContainer = document.querySelector(".modal-container")
+let modalTriggers = document.querySelectorAll(".modal-trigger")
+let modaleAdminProjects = document.querySelector(".modal")
+let modaleAddingNewProjects = document.querySelector(".modal2")
+let returnArrow = document.querySelector('.return-arrow')
+// Ouvrir la modale
 async function toggleModal(){
     modalContainer.classList.toggle("displayed");
     modaleAddingNewProjects.style.display = "none";
     modaleAdminProjects.style.display = "";
     renderWorkList();
-    // Ecouter le click sur le bouton Ajouter une photo pour afficher le formulaire d'ajout de projet OK
-    let openModaleAddingNewProjectsButton = document.querySelector('.add-photo')
-    openModaleAddingNewProjectsButton.addEventListener('click', openNewProjectModal);
-    // Ecouter le click sur le lien Supprimer la galerie
-    let deleteAllProjectsLink = document.querySelector('.delete-link')
-    deleteAllProjectsLink.addEventListener('click', deleteAllWorks);
 }
+modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal));
 // Créer la fonction de suppression d'un projet par Id OK
 async function deleteSelectedWork(id, bearer){
     let deleteConfirmation = confirm("Êtes-vous sûre de vouloir supprimer ce projet ?");
@@ -304,7 +267,8 @@ async function deleteSelectedWork(id, bearer){
 function deleteAllWorks(){
     alert('Voulez-vous vraiment supprimer tous les projets ?');
 }
-
+let deleteAllProjectsLink = document.querySelector('.delete-link')
+deleteAllProjectsLink.addEventListener('click', deleteAllWorks);
 // Créer la fonction pour ouvrir la modale d'ajout d'un nouveau projet OK
 function openNewProjectModal(){
     modaleAdminProjects.style.display = "none";
@@ -314,13 +278,50 @@ function openNewProjectModal(){
         modaleAdminProjects.style.display = "";
     });
 }
+let openModaleAddingNewProjectsButton = document.querySelector('.add-photo')
+openModaleAddingNewProjectsButton.addEventListener('click', openNewProjectModal);
+// Gestion de l'ajout d'un nouveau projet ----------------------------------------//
+// Récupérer les élements du formulaire d'ajout de nouveau projet
+let preview = document.querySelector('#preview');
+function setInitialPreviewField(){
+    let icon = document.createElement('label');
+        icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`;
+        icon.setAttribute('for', 'add-photo-field');
+    let imageInputButton = document.createElement('label');
+        imageInputButton.innerText = "+ Ajouter photo";
+        imageInputButton.classList = "photo-input-button";
+        imageInputButton.setAttribute('for', 'add-photo-field');
+    let input = document.createElement('input');
+        input.setAttribute('id', "add-photo-field");
+        input.classList ="reset-input";
+        input.setAttribute('type', "file");
+        input.setAttribute('name', "add-photo-field");
+        input.setAttribute('value', "");
+        input.setAttribute('required', 'true');
+        input.setAttribute('accept', ".jpg, .png");
+        input.setAttribute('style', "opacity: 0;");
+    let para = document.createElement('p');
+        para.innerText = "jpg, png : 4Mo max";
+    preview.appendChild(icon);
+    preview.appendChild(imageInputButton);
+    preview.appendChild(input);
+    preview.appendChild(para);
+}
+//setInitialPreviewField();
+// Écouter la sélection d'une image pour afficher sa miniature OK
+let imageInputField = document.querySelector('#add-photo-field');
+imageInputField.addEventListener('change', updateimageInputFieldDisplay);
+let titleInputField = document.querySelector('#photo-title');
+let categoryInputField = document.querySelector('#category-selector');
+let validateNewProjectAddButton = document.querySelector('#add-project-button');
+validateNewProjectAddButton.addEventListener('click', validateAddingNewProject);
 // Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet : half OK
 function updateimageInputFieldDisplay() {
     while(preview.firstChild){
         preview.removeChild(preview.firstChild);
     };
     let curFiles = imageInputField.files;
-    if(curFiles === 0){
+    if(curFiles.length === 0){
         setInitialPreviewField();
     } else {
         for (let i = 0; i < curFiles.length; i++) {
@@ -334,12 +335,11 @@ function updateimageInputFieldDisplay() {
 }
 // Créer la fonction qui ajoute un nouveau projet
 async function validateAddingNewProject(){
-    await Promise.all([imageInputField, titleInputField, categoryInputField].map(field => field.updateComplete));
     // Créer le formData pour ajouter un nouveau projet
     const newProject = new FormData();
     newProject.append('image', imageInputField.files[0], imageInputField.files[0].name);
-    newProject.append('title', titleInputField.value);
-    newProject.append('category', categoryInputField.value);
+    newProject.append('title', titleInputField.value, titleInputField.name);
+    newProject.append('category', categoryInputField.value, categoryInputField.name);
     // Vérifier les valeurs qu'on a passées au formData
     console.log('image : ', imageInputField.files[0], imageInputField.files[0].name);
     console.log('title : ', titleInputField.value, titleInputField.name);
@@ -353,7 +353,6 @@ async function validateAddingNewProject(){
             method: 'POST',
             headers: {
                 'Authorization': "Bearer " + userCredentialToken,
-                'Content-Type': 'multipart/form-data',
             },
             body: newProject,
         })
@@ -367,7 +366,6 @@ async function validateAddingNewProject(){
         .catch(error => console.log('Il y a une erreur', error));
     };
 }
-validateNewProjectAddButton.addEventListener('click', validateAddingNewProject);
 
 // FEATURES ---------------------------------------------------------------------------------------//
 // Modifier login=>logout et afficher le bouton "modifier" OK
@@ -382,9 +380,6 @@ for (let link of linkers){
         editBar.style.display = "";
     };
 }
-
-// Écouter les clics sur les activateurs/désactivateurs de la modale OK
-modalTriggers.forEach(trigger => trigger.addEventListener('click', toggleModal));
 
 // Vérifier que les champs soient correctement remplis pour activer le bouton de validation ------------------//
 // Récupération du formulaire
