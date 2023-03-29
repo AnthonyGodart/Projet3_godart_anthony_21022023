@@ -219,6 +219,18 @@ async function logUser(event){
             };
         };
 }
+// Modifier login=>logout et afficher le bouton "modifier" OK
+for (let link of linkers){
+    let logButton = link.getAttribute('data-key');
+
+    if (logButton == 'login' && userCredentialToken !=null){
+        link.setAttribute('data-key', 'logout');
+        link.innerText = 'logout';
+        modifierButtons.forEach(modifierButton =>
+            modifierButton.style.display = "");
+        editBar.style.display = "";
+    };
+}
 
 // Afficher la modale OK ---------------------------------------------------------//
 // Récupérer les éléments de la modale
@@ -314,39 +326,47 @@ imageInputField.addEventListener('change', updateimageInputFieldDisplay);
 let titleInputField = document.querySelector('#photo-title');
 let categoryInputField = document.querySelector('#category-selector');
 let validateNewProjectAddButton = document.querySelector('#add-project-button');
-validateNewProjectAddButton.addEventListener('click', validateAddingNewProject);
-// Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet : half OK
-function updateimageInputFieldDisplay() {
-    while(preview.firstChild){
-        preview.removeChild(preview.firstChild);
-    };
-    let curFiles = imageInputField.files;
-    if(curFiles.length === 0){
-        setInitialPreviewField();
+// Vérifier que les champs soient correctement remplis pour activer le bouton de validation ------------------//
+// Récupération du formulaire
+let addNewProjectForm = document.querySelector('#add-photo-form');
+// Ajout d'un gestionnaire d'événements pour écouter la soumission du formulaire
+addNewProjectForm.addEventListener('submit', (e) => {
+    // Empêcher la soumission du formulaire si le bouton est désactivé
+    e.preventDefault();
+    validateAddingNewProject();
+});
+// Écouter la complétion des champs de formulaire pour activer le bouton de validation
+addNewProjectForm.addEventListener('input', () => {
+    // Vérification des champs de formulaire
+    if (titleInputField.value && categoryInputField.value) {
+        validateNewProjectAddButton.classList.remove('inactive');
+        validateNewProjectAddButton.disabled = false;
     } else {
-        for (let i = 0; i < curFiles.length; i++) {
-            let image = document.createElement('img');
-            image.src = window.URL.createObjectURL(curFiles[i]);
-            image.style.maxHeight = '163px';
-            image.style.maxWidth ='123px';
-            preview.appendChild(image);
-        };
+        validateNewProjectAddButton.classList.add('inactive');
+        validateNewProjectAddButton.disabled = true;
+    };
+});
+// Vérifier la taille du fichier 4Mo Max
+function validateFile() {
+    let fileInput = document.getElementById('add-photo-field');
+    if (fileInput.files[0].size > 4000000) {
+        alert('Le fichier ne doit pas dépasser 4Mo');
+        return false;
     }
+    return true;
 }
+addNewProjectForm.addEventListener('submit', (e) => {
+    if (!validateFile()) {
+      e.preventDefault();
+    };
+})
 // Créer la fonction qui ajoute un nouveau projet
 async function validateAddingNewProject(){
     // Créer le formData pour ajouter un nouveau projet
     const newProject = new FormData();
-    newProject.append('image', imageInputField.files[0], imageInputField.files[0].name);
-    newProject.append('title', titleInputField.value, titleInputField.name);
-    newProject.append('category', categoryInputField.value, categoryInputField.name);
-    // Vérifier les valeurs qu'on a passées au formData
-    console.log('image : ', imageInputField.files[0], imageInputField.files[0].name);
-    console.log('title : ', titleInputField.value, titleInputField.name);
-    console.log('category : ', categoryInputField.value, categoryInputField.name);
-    // Vérifier le contenu du formData
-    console.log('le form data', newProject);
-    debugger
+    newProject.append('image', imageInputField.files[0]);
+    newProject.append('title', titleInputField.value);
+    newProject.append('category', categoryInputField.value);
     let addConfirmation = confirm('Voulez-vous valider ce projet ?');
     if(addConfirmation){
         await fetch('http://localhost:5678/api/works',{
@@ -366,55 +386,21 @@ async function validateAddingNewProject(){
         .catch(error => console.log('Il y a une erreur', error));
     };
 }
-
-// FEATURES ---------------------------------------------------------------------------------------//
-// Modifier login=>logout et afficher le bouton "modifier" OK
-for (let link of linkers){
-    let logButton = link.getAttribute('data-key');
-
-    if (logButton == 'login' && userCredentialToken !=null){
-        link.setAttribute('data-key', 'logout');
-        link.innerText = 'logout';
-        modifierButtons.forEach(modifierButton =>
-            modifierButton.style.display = "");
-        editBar.style.display = "";
+// Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet : half OK
+function updateimageInputFieldDisplay() {
+    while(preview.firstChild){
+        preview.removeChild(preview.firstChild);
     };
-}
-
-// Vérifier que les champs soient correctement remplis pour activer le bouton de validation ------------------//
-// Récupération du formulaire
-let addNewProjectForm = document.querySelector('#add-photo-form');
-// Ajout d'un gestionnaire d'événements pour écouter la soumission du formulaire
-addNewProjectForm.addEventListener('submit', (e) => {
-    // Empêcher la soumission du formulaire si le bouton est désactivé
-    if (validateNewProjectAddButton.disabled) {
-    e.preventDefault();
-    return false;
-    };
-});
-// Écouter la complétion des champs de formulaire pour activer le bouton de validation
-addNewProjectForm.addEventListener('input', () => {
-    // Vérification des champs de formulaire
-    if (titleInputField.value && categoryInputField.value) {
-        validateNewProjectAddButton.classList.remove('inactive');
-        validateNewProjectAddButton.disabled = false;
+    let curFiles = imageInputField.files;
+    if(curFiles.length === 0){
+        setInitialPreviewField();
     } else {
-        validateNewProjectAddButton.classList.add('inactive');
-        validateNewProjectAddButton.disabled = true;
-    };
-});
-/** // Vérifier la taille du fichier 4Mo Max
-function validateFile() {
-    let fileInput = document.getElementById('add-photo-field');
-    if (fileInput.files[0].size > 4000000) {
-        alert('Le fichier ne doit pas dépasser 4Mo');
-        return false;
+        for (let i = 0; i < curFiles.length; i++) {
+            let image = document.createElement('img');
+            image.src = window.URL.createObjectURL(curFiles[i]);
+            image.style.maxHeight = '163px';
+            image.style.maxWidth ='123px';
+            preview.appendChild(image);
+        };
     }
-    return true;
 }
-addNewProjectForm.addEventListener('submit', (e) => {
-    if (!validateFile()) {
-      e.preventDefault();
-    };
-})
-*/
