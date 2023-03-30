@@ -1,5 +1,5 @@
-let workList = []
-let filterButtons = document.querySelectorAll(".filter")
+let workList = [];
+let filterButtons = document.querySelectorAll(".filter");
 let clickedButtonId = 0;
 // Fonction principale : Afficher en dynamique les fiches des travaux avec un data-id intégré: OK
 // Dans la page principale et dans la modale OK
@@ -78,7 +78,7 @@ async function renderWorkList(){
         };
     };
     // Au clic sur le bouton filtre
-    onButtonFilterClick()
+    onButtonFilterClick();
 }
 // Filtrer les projets et modifier l'affichage des boutons de filtre: OK
 async function filterSheet() {

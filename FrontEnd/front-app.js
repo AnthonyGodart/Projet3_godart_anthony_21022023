@@ -2,30 +2,31 @@ import { renderWorkList } from "./renderWork.js";
 import { handleLinkClick, logUser, userCredentialToken, modifierButtons, editBar } from "./login.js";
 import { toggleModal, openNewProjectModal, returnArrow } from "./modal.js";
 
-// A la première ouverture de la page web ou à son rechargement
+// A la première ouverture de la page web ou à son rechargement OK
 renderWorkList();
 
-// Gestion de l'ajout d'un nouveau projet ----------------------------------------//
-// Récupérer les élements du formulaire d'ajout de nouveau projet
-let preview = document.querySelector('#preview');
+// Gestion de l"ajout d"un nouveau projet ----------------------------------------//
+// Récupérer le champ de prévisualisation OK
+let preview = document.querySelector("#preview");
+// Re-créer l'apsect initial du champt de prévisualisation OK
 function setInitialPreviewField(){
-    let icon = document.createElement('label');
+    let icon = document.createElement("label");
         icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`;
-        icon.setAttribute('for', 'add-photo-field');
-    let imageInputButton = document.createElement('label');
+        icon.setAttribute("for", "add-photo-field");
+    let imageInputButton = document.createElement("label");
         imageInputButton.innerText = "+ Ajouter photo";
         imageInputButton.classList = "photo-input-button";
-        imageInputButton.setAttribute('for', 'add-photo-field');
-    let input = document.createElement('input');
-        input.setAttribute('id', "add-photo-field");
+        imageInputButton.setAttribute("for", "add-photo-field");
+    let input = document.createElement("input");
+        input.setAttribute("id", "add-photo-field");
         input.classList ="reset-input";
-        input.setAttribute('type', "file");
-        input.setAttribute('name', "add-photo-field");
-        input.setAttribute('value', "");
-        input.setAttribute('required', 'true');
-        input.setAttribute('accept', ".jpg, .png");
-        input.setAttribute('style', "opacity: 0;");
-    let para = document.createElement('p');
+        input.setAttribute("type", "file");
+        input.setAttribute("name", "add-photo-field");
+        input.setAttribute("value", "");
+        input.setAttribute("required", "true");
+        input.setAttribute("accept", ".jpg, .png");
+        input.setAttribute("style", "opacity: 0;");
+    let para = document.createElement("p");
         para.innerText = "jpg, png : 4Mo max";
     preview.appendChild(icon);
     preview.appendChild(imageInputButton);
@@ -33,75 +34,77 @@ function setInitialPreviewField(){
     preview.appendChild(para);
 }
 
-// Écouter la sélection d'une image pour afficher sa miniature OK
-let imageInputField = document.querySelector('#add-photo-field');
-imageInputField.addEventListener('change', updateImageInputFieldDisplay);
-let titleInputField = document.querySelector('#photo-title');
-let categoryInputField = document.querySelector('#category-selector');
-let validateNewProjectAddButton = document.querySelector('#add-project-button');
+// Écouter la sélection d"une image pour afficher sa miniature OK
+let imageInputField = document.querySelector("#add-photo-field");
+imageInputField.addEventListener("change", updateImageInputFieldDisplay);
+
+// Récupérer les champs du formulaire OK
+let titleInputField = document.querySelector("#photo-title");
+let categoryInputField = document.querySelector("#category-selector");
+let validateNewProjectAddButton = document.querySelector("#add-project-button");
 
 // Vérifier que les champs soient correctement remplis pour activer le bouton de validation ------------------//
-// Récupération du formulaire
-let addNewProjectForm = document.querySelector('#add-photo-form');
-// Ajout d'un gestionnaire d'événements pour écouter la soumission du formulaire
-addNewProjectForm.addEventListener('submit', (e) => {
+// Récupération du formulaire OK
+let addNewProjectForm = document.querySelector("#add-photo-form");
+// Ajout d"un gestionnaire d"événements pour écouter la soumission du formulaire OK
+addNewProjectForm.addEventListener("submit", (e) => {
     // Empêcher la soumission du formulaire si le bouton est désactivé
     e.preventDefault();
     validateAddingNewProject();
 });
-// Écouter la complétion des champs de formulaire pour activer le bouton de validation
-addNewProjectForm.addEventListener('input', () => {
+// Écouter la complétion des champs de formulaire pour activer le bouton de validation OK
+addNewProjectForm.addEventListener("input", () => {
     // Vérification des champs de formulaire
     if (titleInputField.value && categoryInputField.value) {
-        validateNewProjectAddButton.classList.remove('inactive');
+        validateNewProjectAddButton.classList.remove("inactive");
         validateNewProjectAddButton.disabled = false;
     } else {
-        validateNewProjectAddButton.classList.add('inactive');
+        validateNewProjectAddButton.classList.add("inactive");
         validateNewProjectAddButton.disabled = true;
     };
 });
-// Vérifier la taille du fichier 4Mo Max
+// Vérifier la taille du fichier 4Mo Max OK
 function validateFile() {
     if (imageInputField.files[0].size > 4000000) {
-        alert('Le fichier ne doit pas dépasser 4Mo');
+        alert("Le fichier ne doit pas dépasser 4Mo");
         return false;
     }
     return true;
 }
-addNewProjectForm.addEventListener('submit', (e) => {
+addNewProjectForm.addEventListener("submit", (e) => {
     if (!validateFile()) {
       e.preventDefault();
     };
 })
 
-// Créer la fonction qui ajoute un nouveau projet
+// Créer la fonction qui ajoute un nouveau projet OK
 async function validateAddingNewProject(){
     // Créer le formData pour ajouter un nouveau projet
     const newProject = new FormData();
-    newProject.append('image', imageInputField.files[0]);
-    newProject.append('title', titleInputField.value);
-    newProject.append('category', categoryInputField.value);
-    let addConfirmation = confirm('Voulez-vous valider ce projet ?');
+    newProject.append("image", imageInputField.files[0]);
+    newProject.append("title", titleInputField.value);
+    newProject.append("category", categoryInputField.value);
+    let addConfirmation = confirm("Voulez-vous valider ce projet ?");
     if(addConfirmation){
-        await fetch('http://localhost:5678/api/works',{
-            method: 'POST',
+        await fetch("http://localhost:5678/api/works",{
+            method: "POST",
             headers: {
-                'Authorization': "Bearer " + userCredentialToken,
+                "Authorization": "Bearer " + userCredentialToken,
             },
             body: newProject,
         })
         .then(response => {
             if(response.ok){
-                alert('Le projet a bien été ajouté');
+                alert("Le projet a bien été ajouté");
             } else {
-                alert('Il faut ajouter une photo pour pouvoir ajouter le projet');
+                alert("Il faut ajouter une photo pour pouvoir ajouter le projet");
             };
         })
-        .catch(error => console.log('Il y a une erreur', error));
+        .catch(error => console.log("Il y a une erreur", error));
     };
 }
 
-// Afficher une miniature de l'image sélectionnée dans le formulaire d'ajout nouveau projet : half OK
+// Afficher une miniature de l"image sélectionnée dans le formulaire d"ajout nouveau projet : half-OK
 function updateImageInputFieldDisplay() {
     while(preview.firstChild){
         preview.removeChild(preview.firstChild);
@@ -111,24 +114,24 @@ function updateImageInputFieldDisplay() {
         setInitialPreviewField();
     } else {
         for (let i = 0; i < curFiles.length; i++) {
-            let image = document.createElement('img');
+            let image = document.createElement("img");
             image.src = window.URL.createObjectURL(curFiles[i]);
-            image.style.maxHeight = '163px';
-            image.style.maxWidth ='123px';
+            image.style.maxHeight = "163px";
+            image.style.maxWidth ="123px";
             preview.appendChild(image);
         };
     }
 }
-returnArrow.addEventListener('click', () => {
+returnArrow.addEventListener("click", () => {
     imageInputField.value = "";
-    preview.innerHTML = '';
+    preview.innerHTML = "";
     setInitialPreviewField();
 });
 
 // Unused features -----------------------------------------------//
 // Créer la fonction pour supprimer tous les projets
-let deleteAllProjectsLink = document.querySelector('.delete-link')
+let deleteAllProjectsLink = document.querySelector(".delete-link")
 function deleteAllWorks(){
-    alert('Voulez-vous vraiment supprimer tous les projets ?');
+    alert("Voulez-vous vraiment supprimer tous les projets ?");
 }
-deleteAllProjectsLink.addEventListener('click', deleteAllWorks);
+deleteAllProjectsLink.addEventListener("click", deleteAllWorks);

@@ -1,11 +1,11 @@
-import { renderWorkList } from "./renderWork.js"
+import { renderWorkList } from "./renderWork.js";
 // Afficher la modale OK ---------------------------------------------------------//
 // Récupérer les éléments de la modale
-let modalContainer = document.querySelector(".modal-container")
-let modalTriggers = document.querySelectorAll(".modal-trigger")
-let modaleAdminProjects = document.querySelector(".modal")
-let modaleAddingNewProjects = document.querySelector(".modal2")
-let returnArrow = document.querySelector('.return-arrow')
+let modalContainer = document.querySelector(".modal-container");
+let modalTriggers = document.querySelectorAll(".modal-trigger");
+let modaleAdminProjects = document.querySelector(".modal");
+let modaleAddingNewProjects = document.querySelector(".modal2");
+let returnArrow = document.querySelector('.return-arrow');
 // Ouvrir la modale
 async function toggleModal(){
     modalContainer.classList.toggle("displayed");
@@ -23,7 +23,7 @@ function openNewProjectModal(){
         modaleAdminProjects.style.display = "";
     });
 }
-let openModaleAddingNewProjectsButton = document.querySelector('.add-photo')
+let openModaleAddingNewProjectsButton = document.querySelector('.add-photo');
 openModaleAddingNewProjectsButton.addEventListener('click', openNewProjectModal);
 
-export {toggleModal, openNewProjectModal, returnArrow}
+export {toggleModal, openNewProjectModal, returnArrow};

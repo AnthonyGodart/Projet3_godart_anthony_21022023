@@ -1,10 +1,10 @@
-// Récupérer les liens "projets", "contact" etc...
-let linkers = [...document.querySelectorAll('li')]
-// Ajouter un écouteur d'événements à chaque "lien"
+// Récupérer les liens "projets", "contact" etc... OK
+let linkers = [...document.querySelectorAll('li')];
+// Ajouter un écouteur d'événements à chaque "lien" OK
 linkers.forEach(link => {
-    link.addEventListener('click', () => handleLinkClick(link))
+    link.addEventListener('click', () => handleLinkClick(link));
 })
-// Affecter des ancres aux liens clicables
+// Affecter des ancres aux liens clicables OK
 let linkerHref = ["#portfolio", "#contact", "", "#", "#"];
 let filterBar = document.querySelector('#filter-bar');
 let userCredentialToken = sessionStorage.getItem('token');
@@ -63,7 +63,7 @@ async function logUser(event){
             },
             body: JSON.stringify(userLogin)
         });
-    let authorizedLog = await authorizeLog.json()
+    let authorizedLog = await authorizeLog.json();
         if (authorizedLog != null && 
             authorizedLog.userId !=0 && 
             authorizedLog.token != null){
@@ -89,4 +89,4 @@ for (let link of linkers){
     };
 }
 
-export {handleLinkClick, logUser, userCredentialToken, modifierButtons, editBar}
+export {handleLinkClick, logUser, userCredentialToken, modifierButtons, editBar};
