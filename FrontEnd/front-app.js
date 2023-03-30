@@ -96,6 +96,7 @@ async function validateAddingNewProject(){
         .then(response => {
             if(response.ok){
                 alert("Le projet a bien été ajouté");
+                imageInputField.value="";
             } else {
                 alert("Il faut ajouter une photo pour pouvoir ajouter le projet");
             };
