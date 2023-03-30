@@ -96,6 +96,7 @@ async function validateAddingNewProject(){
         .then(response => {
             if(response.ok){
                 alert("Le projet a bien été ajouté");
+                toggleModal();
                 renderWorkList();
                 window.location.href = "index.html";
             } else {
