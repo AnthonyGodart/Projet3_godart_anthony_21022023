@@ -26,4 +26,4 @@ function openNewProjectModal(){
 let openModaleAddingNewProjectsButton = document.querySelector('.add-photo')
 openModaleAddingNewProjectsButton.addEventListener('click', openNewProjectModal);
 
-export {toggleModal, openNewProjectModal}
+export {toggleModal, openNewProjectModal, returnArrow}

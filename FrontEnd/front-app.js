@@ -1,6 +1,6 @@
 import { renderWorkList } from "./renderWork.js";
 import { handleLinkClick, logUser, userCredentialToken, modifierButtons, editBar } from "./login.js";
-import { toggleModal, openNewProjectModal } from "./modal.js";
+import { toggleModal, openNewProjectModal, returnArrow } from "./modal.js";
 
 // A la première ouverture de la page web ou à son rechargement
 renderWorkList();
@@ -119,6 +119,11 @@ function updateImageInputFieldDisplay() {
         };
     }
 }
+returnArrow.addEventListener('click', () => {
+    imageInputField.value = "";
+    preview.innerHTML = '';
+    setInitialPreviewField();
+});
 
 // Unused features -----------------------------------------------//
 // Créer la fonction pour supprimer tous les projets
