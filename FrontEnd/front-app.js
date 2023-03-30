@@ -96,15 +96,15 @@ async function validateAddingNewProject(){
         .then(response => {
             if(response.ok){
                 alert("Le projet a bien été ajouté");
-                toggleModal();
-                renderWorkList();
-                window.location.href = "index.html";
             } else {
                 alert("Il faut ajouter une photo pour pouvoir ajouter le projet");
             };
         })
         .catch(error => console.log("Il y a une erreur", error));
     };
+                toggleModal();
+                renderWorkList();
+                window.location.href = "index.html";
 }
 
 // Afficher une miniature de l"image sélectionnée dans le formulaire d"ajout nouveau projet : half-OK
