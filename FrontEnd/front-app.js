@@ -1,7 +1,6 @@
 import { renderWorkList } from "./renderWork.js";
 import { handleLinkClick, logUser, userCredentialToken, modifierButtons, editBar } from "./login.js";
 import { toggleModal, openNewProjectModal, returnArrow } from "./modal.js";
-
 // A la première ouverture de la page web ou à son rechargement OK
 renderWorkList();
 
