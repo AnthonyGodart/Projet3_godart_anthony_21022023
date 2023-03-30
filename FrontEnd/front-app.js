@@ -61,10 +61,8 @@ addNewProjectForm.addEventListener('input', () => {
     };
 });
 // Vérifier la taille du fichier 4Mo Max
-/*function validateFile() {
-    let fileInput = document.querySelector('#add-photo-field');
-    console.log(fileInput)
-    if (fileInput.files[0].size > 4000000) {
+function validateFile() {
+    if (imageInputField.files[0].size > 4000000) {
         alert('Le fichier ne doit pas dépasser 4Mo');
         return false;
     }
@@ -74,7 +72,7 @@ addNewProjectForm.addEventListener('submit', (e) => {
     if (!validateFile()) {
       e.preventDefault();
     };
-})*/
+})
 
 // Créer la fonction qui ajoute un nouveau projet
 async function validateAddingNewProject(){
