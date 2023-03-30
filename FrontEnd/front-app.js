@@ -102,9 +102,6 @@ async function validateAddingNewProject(){
         })
         .catch(error => console.log("Il y a une erreur", error));
     };
-                toggleModal();
-                renderWorkList();
-                window.location.href = "index.html";
 }
 
 // Afficher une miniature de l"image sélectionnée dans le formulaire d"ajout nouveau projet : half-OK
