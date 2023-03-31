@@ -7,7 +7,7 @@ renderWorkList();
 // Gestion de l"ajout d"un nouveau projet ----------------------------------------//
 // Récupérer le champ de prévisualisation OK
 let preview = document.querySelector("#preview");
-// Re-créer l'aspect initial du champt de prévisualisation OK
+// Re-créer l'aspect initial du champ de prévisualisation OK
 function setInitialPreviewField(){
     let icon = document.createElement("label");
         icon.innerHTML = `<i class="fa-regular fa-image frame-picture"></i>`;

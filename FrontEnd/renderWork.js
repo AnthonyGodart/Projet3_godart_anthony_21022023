@@ -12,23 +12,22 @@ async function renderWorkList(){
     let gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
 
-    for ( let i = 0; i < workList.length; i ++){
-        let workElement = document.createElement("figure");
-        let imageElement = document.createElement("img");
-        imageElement.src = workList[i].imageUrl;
+    workList.forEach((workItem) => {
+        const workElement = document.createElement("figure");
+        const imageElement = document.createElement("img");
+        imageElement.src = workItem.imageUrl;
         workElement.appendChild(imageElement);
-        let titleElement = document.createElement("figcaption");
-        titleElement.innerText = workList[i].title;
+        const titleElement = document.createElement("figcaption");
+        titleElement.innerText = workItem.title;
         workElement.appendChild(titleElement);
         workElement.classList.add("sheet");
-        let workSheetId = workList[i].categoryId;
-        workElement.dataset.id = workSheetId;
+        workElement.dataset.id = workItem.categoryId;
         gallery.appendChild(workElement);
-    };
+    });      
 
     let galleryModal = document.querySelector(".gallery-modal");
     galleryModal.innerHTML = '';
-    for ( let j = 0; j < workList.length; j ++){
+    workList.forEach((workItem) => {
         let workElement = document.createElement("figure");
             let trashCan = document.createElement('i');
                     trashCan.classList = "fa-sharp fa-solid fa-trash-can delete-button";
@@ -39,7 +38,7 @@ async function renderWorkList(){
                     trashCan.style.color = "white";
                     trashCan.style.background = "black";
                     trashCan.style.cursor = "pointer";
-                    trashCan.setAttribute('data-id', workList[j].id);
+                    trashCan.setAttribute('data-id', workItem.id);
             workElement.appendChild(trashCan);
             let dragCross = document.createElement('i');
             workElement.addEventListener('mouseover', () => {                
@@ -57,16 +56,16 @@ async function renderWorkList(){
                 dragCross.style.display = "none";
             })
             let imageElement = document.createElement("img");
-                imageElement.src = workList[j].imageUrl;
+                imageElement.src = workItem.imageUrl;
             workElement.appendChild(imageElement);
             let titleElement = document.createElement("figcaption");
                 titleElement.innerText = "éditer";
-                titleElement.dataset.id = workList[j].id;
+                titleElement.dataset.id = workItem.id;
                 titleElement.style.fontSize = "9em";
                 titleElement.style.cursor = "pointer";
             workElement.appendChild(titleElement);
             workElement.classList.add("sheet");
-            let workSheetId = workList[j].id;
+            let workSheetId = workItem.id;
                 workElement.dataset.id = workSheetId;
         workElement.style.transform = 'scale(0.12)';
         galleryModal.appendChild(workElement);
@@ -78,7 +77,7 @@ async function renderWorkList(){
                 deleteSelectedWork(id, bearer);
             });
         };
-    };
+    });
     // Au clic sur le bouton filtre
     onButtonFilterClick();
 }
