@@ -1,5 +1,6 @@
 import { renderWorkList } from "./renderWork.js";
 
+let workList = [];
 // Créer la fonction de suppression d'un projet par Id OK
 async function deleteSelectedWork(id, bearer){
     let deleteConfirmation = confirm("Êtes-vous sûre de vouloir supprimer ce projet ?");

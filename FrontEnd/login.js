@@ -27,7 +27,10 @@ function handleLinkClick(link){
         loginPage.style.display = "";
         // Ajouter un événement de soumission du formulaire de connexion
         let loginForm = document.getElementById('login-form');
-        loginForm.addEventListener("submit", logUser);
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            logUser();
+        });
     } else if (link.innerText == 'logout') {
         // Réinitialiser le lien de connexion et supprimer le token de session
         link.setAttribute('data-key', 'login');
@@ -47,8 +50,7 @@ function handleLinkClick(link){
     }
 }
 // Connexion de l'utilisateur OK
-async function logUser(event){
-    event.preventDefault();
+async function logUser(){
     let userLogin = {
         'email': document.getElementById('emailUser').value,
         'password': document.getElementById('passwordUser').value

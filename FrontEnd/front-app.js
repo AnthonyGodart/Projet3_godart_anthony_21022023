@@ -1,6 +1,7 @@
 import { renderWorkList } from "./renderWork.js";
 import { handleLinkClick, logUser, userCredentialToken, modifierButtons, editBar } from "./login.js";
 import { toggleModal, openNewProjectModal, returnArrow } from "./modal.js";
+
 // A la première ouverture de la page web ou à son rechargement OK
 renderWorkList();
 
@@ -47,8 +48,7 @@ let validateNewProjectAddButton = document.querySelector("#add-project-button");
 let addNewProjectForm = document.querySelector("#add-photo-form");
 // Ajout d"un gestionnaire d"événements pour écouter la soumission du formulaire OK
 addNewProjectForm.addEventListener("submit", (e) => {
-    // Empêcher la soumission du formulaire si le bouton est désactivé
-    e.preventDefault();
+    e.preventDefault();    
     validateAddingNewProject();
 });
 // Écouter la complétion des champs de formulaire pour activer le bouton de validation OK
@@ -63,7 +63,7 @@ addNewProjectForm.addEventListener("input", () => {
     };
 });
 // Vérifier la taille du fichier 4Mo Max OK
-function validateFile() {
+function validateFile(){
     if (imageInputField.files[0].size > 4000000) {
         alert("Le fichier ne doit pas dépasser 4Mo");
         return false;
@@ -78,11 +78,12 @@ addNewProjectForm.addEventListener("submit", (e) => {
 
 // Créer la fonction qui ajoute un nouveau projet OK
 async function validateAddingNewProject(){
-    // Créer le formData pour ajouter un nouveau projet
+    // Créer le formData pour ajouter un nouveau projet OK
     const newProject = new FormData();
     newProject.append("image", imageInputField.files[0]);
     newProject.append("title", titleInputField.value);
     newProject.append("category", categoryInputField.value);
+
     let addConfirmation = confirm("Voulez-vous valider ce projet ?");
     if(addConfirmation){
         await fetch("http://localhost:5678/api/works",{
@@ -93,14 +94,15 @@ async function validateAddingNewProject(){
             body: newProject,
         })
         .then(response => {
-            if(response.ok){
-                alert("Le projet a bien été ajouté");
+            if(response.ok){               
+                console.log('le projet a bien été ajouté');
+                window.location.href = "index.html";
             } else {
                 alert("Il faut ajouter une photo pour pouvoir ajouter le projet");
             };
         })
         .catch(error => console.log("Il y a une erreur", error));
-    };
+    };    
 }
 
 // Afficher une miniature de l"image sélectionnée dans le formulaire d"ajout nouveau projet : half-OK
@@ -134,3 +136,11 @@ function deleteAllWorks(){
     alert("Voulez-vous vraiment supprimer tous les projets ?");
 }
 deleteAllProjectsLink.addEventListener("click", deleteAllWorks);
+
+// Test de rafraîchissement de la page
+
+if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+    console.log("La page a été rafraîchie");
+  } else {
+    console.log("La page n'a pas été rafraîchie");
+  }
