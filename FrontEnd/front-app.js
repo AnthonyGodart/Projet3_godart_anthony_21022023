@@ -115,8 +115,8 @@ function updateImageInputFieldDisplay() {
         for (let i = 0; i < curFiles.length; i++) {
             let image = document.createElement("img");
             image.src = window.URL.createObjectURL(curFiles[i]);
-            image.style.maxHeight = "163px";
-            image.style.maxWidth ="123px";
+            image.style.maxHeight = "170px";
+            image.style.maxWidth ="129px";
             preview.appendChild(image);
         };
     }
