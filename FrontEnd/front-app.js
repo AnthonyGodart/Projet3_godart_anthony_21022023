@@ -140,7 +140,7 @@ deleteAllProjectsLink.addEventListener("click", deleteAllWorks);
 // Test de rafraîchissement de la page
 
 if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-    console.log("La page a été rafraîchie");
+    console.log("La page a été (re)-chargée");
   } else {
-    console.log("La page n'a pas été rafraîchie");
+    console.log("La page n'a pas été rechargée");
   }
