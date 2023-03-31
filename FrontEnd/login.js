@@ -81,7 +81,6 @@ async function logUser(){
 // Modifier login=>logout et afficher le bouton "modifier" OK
 for (let link of linkers){
     let logButton = link.getAttribute('data-key');
-
     if (logButton == 'login' && userCredentialToken !=null){
         link.setAttribute('data-key', 'logout');
         link.innerText = 'logout';

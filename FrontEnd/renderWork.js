@@ -8,10 +8,9 @@ let clickedButtonId = 0;
 async function renderWorkList(){
     workList = await fetch("http://localhost:5678/api/works")
         .then(workList => workList.json());
-
+    // Affichage des projets dans le portfolio
     let gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
-
     workList.forEach((workItem) => {
         const workElement = document.createElement("figure");
         const imageElement = document.createElement("img");
@@ -25,6 +24,7 @@ async function renderWorkList(){
         gallery.appendChild(workElement);
     });      
 
+    // Affichage des projets dans la modale
     let galleryModal = document.querySelector(".gallery-modal");
     galleryModal.innerHTML = '';
     workList.forEach((workItem) => {
@@ -69,6 +69,7 @@ async function renderWorkList(){
                 workElement.dataset.id = workSheetId;
         workElement.style.transform = 'scale(0.12)';
         galleryModal.appendChild(workElement);
+        
         let deleteButtons = document.querySelectorAll('.delete-button');
         for ( let deleteButton of deleteButtons){
             deleteButton.addEventListener('click', () => {
@@ -78,10 +79,11 @@ async function renderWorkList(){
             });
         };
     });
-    // Au clic sur le bouton filtre
+
+    // Appeler la fonction pour filtrer les projets et modifier la couleur des boutons OK
     onButtonFilterClick();
 }
-// Filtrer les projets et modifier l'affichage des boutons de filtre: OK
+// Filtrer les projets et modifier l'affichage des boutons de filtre OK
 async function filterSheet() {
     let gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
@@ -100,7 +102,7 @@ async function filterSheet() {
         gallery.appendChild(workElement);
     };
 }
-// Je change les couleurs des boutons de la barre de filtres en fonction de celui sélectionné: OK
+// Je change les couleurs des boutons de la barre de filtres en fonction de celui sélectionné OK
 function changeFilterButtonStyle(button){
     if(button.classList.contains("active")){
         return;
@@ -118,9 +120,9 @@ function changeFilterButtonStyle(button){
 function onButtonFilterClick(){
     for(let button of filterButtons){
         button.addEventListener('click', () => {
-            //Ici la fonction pour changer la couleur du bouton lors du click : OK
+            // Changer la couleur du bouton lors du click OK
             changeFilterButtonStyle(button);
-            //Ici la fonction pour filtrer les projets par catégorie (data-id) en fonction du bouton cliqué (data-key)
+            //Appel de la fonction pour filtrer les projets par catégorie (data-id) en fonction du bouton cliqué (data-key) OK
             if(button.getAttribute('data-key') != 0){
                 filterSheet();
             } else {
