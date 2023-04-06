@@ -25,6 +25,8 @@ function handleLinkClick(link){
         let sections = document.querySelectorAll('section:not(#login-page)');
         sections.forEach(section => section.style.display = "none");
         loginPage.style.display = "";
+        link.style.fontWeight = "bolder";
+        link.style.fontSize = "1.4em"
         // Ajouter un événement de soumission du formulaire de connexion
         let loginForm = document.getElementById('login-form');
         loginForm.addEventListener("submit", (e) => {
