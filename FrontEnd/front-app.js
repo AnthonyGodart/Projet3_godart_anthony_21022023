@@ -12,11 +12,10 @@ let imageInputField = document.querySelector("#add-photo-field");
 let titleInputField = document.querySelector("#photo-title");
 let categoryInputField = document.querySelector("#category-selector");
 let validateNewProjectAddButton = document.querySelector("#add-project-button");
-
 // Vérifier que les champs soient correctement remplis ------------------//
 // Vérifier la complétion des champs titre et catégorie pour activer le bouton Valider OK
 addNewProjectForm.addEventListener("input", () => {
-    if (titleInputField.value && categoryInputField.value) {
+    if ( imageInputField.files[0] && titleInputField.value && categoryInputField.value) {
         validateNewProjectAddButton.classList.remove("inactive");
         validateNewProjectAddButton.disabled = false;
     } else {
@@ -54,7 +53,7 @@ async function validateAddingNewProject(){
                 console.log('le projet a bien été ajouté');
                 window.location.href = "index.html";
             } else {
-                alert("Il faut ajouter une photo pour pouvoir ajouter le projet");
+                alert("L\'ajout de projet n'a pas abouti");
             };
         })
         .catch(error => console.log("Il y a une erreur", error));
@@ -70,7 +69,7 @@ addNewProjectForm.addEventListener("submit", (e) => {
     }
 });
 
-// Écouter les événements relatifs à la prévisualisation OK
+// Écouter les événements relatifs à la prévisualisation half-OK
 imageInputField.addEventListener("change", updateImageInputFieldDisplay);
 returnArrow.addEventListener("click", () => {
     imageInputField.value = "";
@@ -78,7 +77,7 @@ returnArrow.addEventListener("click", () => {
     setInitialPreviewField();
 });
 
-// Unused features -----------------------------------------------//
+// Unused feature -----------------------------------------------//
 // Créer la fonction pour supprimer tous les projets
 let deleteAllProjectsLink = document.querySelector(".delete-link")
 function deleteAllWorks(){

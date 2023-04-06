@@ -415,6 +415,9 @@ input[type="submit"]{
 	color: rgba(0, 0, 0, 0.09);
 	padding: 20px;
 }
+.form-field-div>label{
+	color: #3D3D3D
+}
 .form-button{
 	background-color: #1D6154;
 	color: #FFFFFF;

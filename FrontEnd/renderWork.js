@@ -8,19 +8,20 @@ let clickedButtonId = 0;
 async function renderWorkList(){
     workList = await fetch("http://localhost:5678/api/works")
         .then(workList => workList.json());
+
     // Affichage des projets dans le portfolio
     let gallery = document.querySelector(".gallery");
     gallery.innerHTML = '';
     workList.forEach((workItem) => {
         const workElement = document.createElement("figure");
         const imageElement = document.createElement("img");
-        imageElement.src = workItem.imageUrl;
-        workElement.appendChild(imageElement);
+            imageElement.src = workItem.imageUrl;
+            workElement.appendChild(imageElement);
         const titleElement = document.createElement("figcaption");
-        titleElement.innerText = workItem.title;
-        workElement.appendChild(titleElement);
-        workElement.classList.add("sheet");
-        workElement.dataset.id = workItem.categoryId;
+            titleElement.innerText = workItem.title;
+            workElement.appendChild(titleElement);
+            workElement.classList.add("sheet");
+            workElement.dataset.id = workItem.categoryId;
         gallery.appendChild(workElement);
     });      
 

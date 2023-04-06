@@ -53,7 +53,7 @@ function handleLinkClick(link){
 async function logUser(){
     let userLogin = {
         'email': document.getElementById('emailUser').value,
-        'password': document.getElementById('passwordUser').value
+        'password': document.getElementById('passwordUser').value,
     };
     let authorizeLog = 
         await fetch("http://localhost:5678/api/users/login",
